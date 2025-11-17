@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <title>EcoGrid</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <header>
+        <h1>EcoGrid</h1>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#tree">Árvore</a></li>
+                <li><a href="#simulation">Simulação</a></li>
+                <li><a href="#change-node">Modificar nó</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="grid">
+        <section id="tree">
+            <button id="btn-loadTree">Carregar árvore</button>
+            <div class="tree-container"></div>
+            <div id="tooltip" class="hidden"></div>
+        </section>
+
+        <section id="simulation">
+            <h1>Escolha um evento para simular</h1>
+            <p>Obs: o programa forçará o evento a acontecer no nó em questão!</p>
+
+            <form action="">
+                <label for="sim-chosen-node">Digite o id do nó escolhido: </label>
+                <input type="text" name="sim-chosen-node" id="chosen-node" required>
+
+                <input type="radio" name="simulation-choice" value="overload" id="overload" required>
+                <label for="overload">Sobrecarga</label>
+
+                <input type="radio" name="simulation-choice" value="node-failure" id="node-failure">
+                <label for="node-failure">Falha de nó</label>
+
+                <input type="radio" name="simulation-choice" value="consumption-peak" id="consumption-peak">
+                <label for="consumption-peak">Pico de consumo</label>
+
+                <button type="submit">Enviar</button>
+            </form>
+
+            <div class="tree-logs-container">
+                <div class="tree-container"></div>
+                <div class="logs-container"></div>
+            </div>
+        </section>
+
+        <section id="change-node">
+            <h1>Alterar atributos de um nó</h1>
+            <p>Aqui você poderá alterar o valor de um ou mais atributos do nó selecionado
+                e ver como o sistema responde às suas mudanças!
+            </p>
+            <p>Deixe o campo vazio se não quiser que nenhuma mudança seja feita</p>
+
+            <form action="">
+                <label for="node-for-change">Digite o id do nó escolhido: </label>
+                <input type="text" name="node-for-change" required>
+
+                <label for="capacity-kw">Capacidade nominal em kW: </label>
+                <input type="number" name="capacity-kw">
+
+                <label for="current_load_kw">Carga atual em kW: </label>
+                <input type="number" name="current_load_kw">
+
+                <button type="submit">Enviar</button>
+            </form>
+            
+            <div class="tree-logs-container">
+                <div class="tree-container"></div>
+                <div class="logs-container"></div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="script.js"></script>
+    <script src="tree.js"></script>
+</body>
+</html>
