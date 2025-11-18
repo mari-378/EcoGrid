@@ -19,27 +19,32 @@
 
     <main class="grid">
         <section id="tree">
-            <button id="btn-loadTree">Carregar árvore</button>
+            <h2>Carregue a árvore original</h2>
+            <button id="btn-load-tree">Carregar</button>
             <div class="tree-container"></div>
             <div id="tooltip" class="hidden"></div>
         </section>
 
         <section id="simulation">
-            <h1>Escolha um evento para simular</h1>
+            <h2>Escolha um evento para simular</h2>
             <p>Obs: o programa forçará o evento a acontecer no nó em questão!</p>
 
             <form action="">
-                <label for="sim-chosen-node">Digite o id do nó escolhido: </label>
-                <input type="text" name="sim-chosen-node" id="chosen-node" required>
+                <div>
+                    <label for="sim-chosen-node">Digite o id do nó escolhido: </label>
+                    <input type="text" name="sim-chosen-node" id="chosen-node" required>
+                </div>
 
-                <input type="radio" name="simulation-choice" value="overload" id="overload" required>
-                <label for="overload">Sobrecarga</label>
+                <div>
+                    <input type="radio" name="simulation-choice" value="overload" id="overload" required>
+                    <label for="overload">Sobrecarga</label>
 
-                <input type="radio" name="simulation-choice" value="node-failure" id="node-failure">
-                <label for="node-failure">Falha de nó</label>
+                    <input type="radio" name="simulation-choice" value="node-failure" id="node-failure">
+                    <label for="node-failure">Falha de nó</label>
 
-                <input type="radio" name="simulation-choice" value="consumption-peak" id="consumption-peak">
-                <label for="consumption-peak">Pico de consumo</label>
+                    <input type="radio" name="simulation-choice" value="consumption-peak" id="consumption-peak">
+                    <label for="consumption-peak">Pico de consumo</label>
+                </div>
 
                 <button type="submit">Enviar</button>
             </form>
@@ -51,22 +56,28 @@
         </section>
 
         <section id="change-node">
-            <h1>Alterar atributos de um nó</h1>
+            <h2>Altere atributos de um nó</h2>
             <p>Aqui você poderá alterar o valor de um ou mais atributos do nó selecionado
                 e ver como o sistema responde às suas mudanças!
             </p>
             <p>Deixe o campo vazio se não quiser que nenhuma mudança seja feita</p>
 
             <form action="">
-                <label for="node-for-change">Digite o id do nó escolhido: </label>
-                <input type="text" name="node-for-change" required>
+                <div>
+                    <label for="node-for-change">Digite o id do nó escolhido: </label>
+                    <input type="text" name="node-for-change" required>
+                </div>
 
-                <label for="capacity-kw">Capacidade nominal em kW: </label>
-                <input type="number" name="capacity-kw">
-
-                <label for="current_load_kw">Carga atual em kW: </label>
-                <input type="number" name="current_load_kw">
-
+                <div>
+                    <label for="capacity-kw">Capacidade nominal em kW: </label>
+                    <input type="number" name="capacity-kw">
+                </div>
+                
+                <div>
+                    <label for="current_load_kw">Carga atual em kW: </label>
+                    <input type="number" name="current_load_kw">
+                </div>
+                
                 <button type="submit">Enviar</button>
             </form>
             

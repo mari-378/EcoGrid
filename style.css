@@ -1,0 +1,148 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --fundo: #FBF8EF;
+    --fundo-logs: #ffdca3;
+    --hover: #defafd;
+    --claro: #B4EBE6;
+    --medio: #80CBC4;
+    --escuro: #FFB433;
+    --borda: #57B4BA;
+    --sombra: #14141469;
+}
+
+body {
+    font-size: 16px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+header {
+    background-color: var(--escuro);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+    position: sticky;
+    top: 0;
+    box-shadow: 0.1rem 0.1rem 0.5rem var(--sombra);
+}
+
+nav ul.nav-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+ul.nav-links li {
+    list-style: none;
+}
+
+ul.nav-links li a {
+    color: black;
+    text-decoration: none;
+    transition: color .3s ease;
+}
+
+ul.nav-links li a:hover {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+main.grid {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr;
+}
+
+main.grid section#tree {
+    grid-area: 0 / 0 / 1 / 1;
+    background-color: var(--medio);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 100vh;
+    scroll-margin-top: 2.3rem;
+}
+
+section#tree div.tree-container {
+    width: 95%;
+    height: 100%;
+    background-color: var(--fundo);
+    border-radius: 1rem;
+    overflow: hidden;
+    margin: 0 auto;
+    margin-bottom: 1.5rem;
+    box-shadow: 0.1rem 0.1rem 0.5rem var(--sombra);
+}
+
+main.grid section#simulation {
+    grid-area: 1 / 0 / 2 / 1;
+    background-color: var(--claro);
+}
+
+main.grid section#change-node {
+    grid-area: 2 / 0 / 3 / 1;
+    background-color: var(--medio);
+}
+
+main.grid section#simulation,
+main.grid section#change-node {
+    padding: 1rem;
+    scroll-margin-top: 2.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+section#simulation form,
+section#change-node form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.tree-logs-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.tree-logs-container .tree-container {
+    width: 80%;
+    background-color: var(--fundo);
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0.1rem 0.1rem 0.5rem var(--sombra);
+}
+
+.logs-container {
+    width: 20%;
+    background-color: var(--fundo-logs);
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0.1rem 0.1rem 0.5rem var(--sombra);
+}
+
+section#tree button#btn-load-tree,
+section#simulation form button,
+section#change-node form button {
+    width: 5rem;
+    padding: 0.2rem;
+    border: 0.1rem solid var(--borda);
+    box-shadow: 0.05rem 0.05rem 0.1rem var(--sombra);
+    border-radius: 0.3rem;
+    transition: background-color .3s ease;
+    cursor: pointer;
+}
+
+section#tree button#btn-load-tree:hover,
+section#simulation form button:hover,
+section#change-node form button:hover {
+    background-color: var(--hover);
+}
