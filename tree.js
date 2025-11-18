@@ -251,7 +251,6 @@ simulationForm.addEventListener("submit", async (e) => {
 
 
 // lógica da seção de change-node
-
 const changeForm = document.querySelector("#change-node form");
 
 changeForm.addEventListener("submit", async (e) => {
