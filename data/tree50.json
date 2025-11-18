@@ -1,0 +1,496 @@
+[
+  {
+    "id": "root",
+    "parent_id": null,
+    "name": "Main Substation",
+    "node_type": "substation",
+    "capacity_kw": 5000,
+    "current_load_kw": 3100,
+    "utilization_ratio": 0.62,
+    "status": "normal",
+    "metadata": { "region": "north" }
+  },
+
+  {
+    "id": "t1",
+    "parent_id": "root",
+    "name": "Transformer A",
+    "node_type": "transformer",
+    "capacity_kw": 1200,
+    "current_load_kw": 800,
+    "utilization_ratio": 0.67,
+    "status": "normal",
+    "metadata": {}
+  },
+  {
+    "id": "t2",
+    "parent_id": "root",
+    "name": "Transformer B",
+    "node_type": "transformer",
+    "capacity_kw": 1300,
+    "current_load_kw": 980,
+    "utilization_ratio": 0.75,
+    "status": "warning",
+    "metadata": {}
+  },
+
+  {
+    "id": "c1",
+    "parent_id": "t1",
+    "name": "House 1",
+    "node_type": "consumer",
+    "capacity_kw": 20,
+    "current_load_kw": 10,
+    "utilization_ratio": 0.5,
+    "status": "normal",
+    "metadata": {}
+  },
+  {
+    "id": "c2",
+    "parent_id": "t1",
+    "name": "House 2",
+    "node_type": "consumer",
+    "capacity_kw": 25,
+    "current_load_kw": 18,
+    "utilization_ratio": 0.72,
+    "status": "warning",
+    "metadata": {}
+  },
+
+  {
+    "id": "c3",
+    "parent_id": "t2",
+    "name": "House 3",
+    "node_type": "consumer",
+    "capacity_kw": 30,
+    "current_load_kw": 28,
+    "utilization_ratio": 0.93,
+    "status": "critical",
+    "metadata": {}
+  },
+  {
+    "id": "c4",
+    "parent_id": "t2",
+    "name": "House 4",
+    "node_type": "consumer",
+    "capacity_kw": 22,
+    "current_load_kw": 16,
+    "utilization_ratio": 0.73,
+    "status": "warning",
+    "metadata": {}
+  },
+
+  {
+    "id": "t3",
+    "parent_id": "c1",
+    "name": "Mini Transformer A1",
+    "node_type": "transformer",
+    "capacity_kw": 200,
+    "current_load_kw": 120,
+    "utilization_ratio": 0.6,
+    "status": "normal",
+    "metadata": {}
+  },
+  {
+    "id": "t4",
+    "parent_id": "c1",
+    "name": "Mini Transformer A2",
+    "node_type": "transformer",
+    "capacity_kw": 180,
+    "current_load_kw": 150,
+    "utilization_ratio": 0.83,
+    "status": "warning",
+    "metadata": {}
+  },
+
+  {
+    "id": "c5",
+    "parent_id": "c2",
+    "name": "House 5",
+    "node_type": "consumer",
+    "capacity_kw": 18,
+    "current_load_kw": 9,
+    "utilization_ratio": 0.5,
+    "status": "normal",
+    "metadata": {}
+  },
+  {
+    "id": "c6",
+    "parent_id": "c2",
+    "name": "House 6",
+    "node_type": "consumer",
+    "capacity_kw": 28,
+    "current_load_kw": 27,
+    "utilization_ratio": 0.96,
+    "status": "critical",
+    "metadata": {}
+  },
+
+  {
+    "id": "c7",
+    "parent_id": "c3",
+    "name": "House 7",
+    "node_type": "consumer",
+    "capacity_kw": 23,
+    "current_load_kw": 12,
+    "utilization_ratio": 0.52,
+    "status": "normal",
+    "metadata": {}
+  },
+  {
+    "id": "c8",
+    "parent_id": "c3",
+    "name": "House 8",
+    "node_type": "consumer",
+    "capacity_kw": 24,
+    "current_load_kw": 19,
+    "utilization_ratio": 0.79,
+    "status": "warning",
+    "metadata": {}
+  },
+
+  {
+    "id": "c9",
+    "parent_id": "c4",
+    "name": "House 9",
+    "node_type": "consumer",
+    "capacity_kw": 21,
+    "current_load_kw": 14,
+    "utilization_ratio": 0.66,
+    "status": "normal",
+    "metadata": {}
+  },
+  {
+    "id": "c10",
+    "parent_id": "c4",
+    "name": "House 10",
+    "node_type": "consumer",
+    "capacity_kw": 27,
+    "current_load_kw": 24,
+    "utilization_ratio": 0.89,
+    "status": "critical",
+    "metadata": {}
+  },
+
+  {
+    "id": "s1",
+    "parent_id": "t3",
+    "name": "Solar Unit 1",
+    "node_type": "solar",
+    "capacity_kw": 8,
+    "current_load_kw": 3,
+    "utilization_ratio": 0.38,
+    "status": "normal",
+    "metadata": {}
+  },
+  {
+    "id": "s2",
+    "parent_id": "t3",
+    "name": "Solar Unit 2",
+    "node_type": "solar",
+    "capacity_kw": 10,
+    "current_load_kw": 9,
+    "utilization_ratio": 0.9,
+    "status": "critical",
+    "metadata": {}
+  },
+
+  {
+    "id": "b1",
+    "parent_id": "t4",
+    "name": "Battery Unit 1",
+    "node_type": "battery",
+    "capacity_kw": 50,
+    "current_load_kw": 33,
+    "utilization_ratio": 0.66,
+    "status": "normal",
+    "metadata": {}
+  },
+  {
+    "id": "b2",
+    "parent_id": "t4",
+    "name": "Battery Unit 2",
+    "node_type": "battery",
+    "capacity_kw": 60,
+    "current_load_kw": 50,
+    "utilization_ratio": 0.83,
+    "status": "warning",
+    "metadata": {}
+  },
+
+  {
+    "id": "g1",
+    "parent_id": "c5",
+    "name": "Generator 1",
+    "node_type": "generator",
+    "capacity_kw": 100,
+    "current_load_kw": 60,
+    "utilization_ratio": 0.6,
+    "status": "normal",
+    "metadata": {}
+  },
+  {
+    "id": "g2",
+    "parent_id": "c5",
+    "name": "Generator 2",
+    "node_type": "generator",
+    "capacity_kw": 90,
+    "current_load_kw": 70,
+    "utilization_ratio": 0.77,
+    "status": "warning",
+    "metadata": {}
+  },
+
+  {
+    "id": "c11",
+    "parent_id": "c6",
+    "name": "House 11",
+    "node_type": "consumer",
+    "capacity_kw": 19,
+    "current_load_kw": 13,
+    "utilization_ratio": 0.68,
+    "status": "normal",
+    "metadata": {}
+  },
+  {
+    "id": "c12",
+    "parent_id": "c6",
+    "name": "House 12",
+    "node_type": "consumer",
+    "capacity_kw": 26,
+    "current_load_kw": 25,
+    "utilization_ratio": 0.96,
+    "status": "critical",
+    "metadata": {}
+  },
+
+  {
+    "id": "c13",
+    "parent_id": "c7",
+    "name": "House 13",
+    "node_type": "consumer",
+    "capacity_kw": 22,
+    "current_load_kw": 9,
+    "utilization_ratio": 0.41,
+    "status": "normal",
+    "metadata": {}
+  },
+  {
+    "id": "c14",
+    "parent_id": "c7",
+    "name": "House 14",
+    "node_type": "consumer",
+    "capacity_kw": 23,
+    "current_load_kw": 20,
+    "utilization_ratio": 0.86,
+    "status": "warning",
+    "metadata": {}
+  },
+
+  {
+    "id": "c15",
+    "parent_id": "c8",
+    "name": "House 15",
+    "node_type": "consumer",
+    "capacity_kw": 21,
+    "current_load_kw": 15,
+    "utilization_ratio": 0.71,
+    "status": "warning",
+    "metadata": {}
+  },
+  {
+    "id": "c16",
+    "parent_id": "c8",
+    "name": "House 16",
+    "node_type": "consumer",
+    "capacity_kw": 29,
+    "current_load_kw": 28,
+    "utilization_ratio": 0.97,
+    "status": "critical",
+    "metadata": {}
+  },
+
+  {
+    "id": "c17",
+    "parent_id": "c9",
+    "name": "House 17",
+    "node_type": "consumer",
+    "capacity_kw": 25,
+    "current_load_kw": 12,
+    "utilization_ratio": 0.48,
+    "status": "normal",
+    "metadata": {}
+  },
+  {
+    "id": "c18",
+    "parent_id": "c9",
+    "name": "House 18",
+    "node_type": "consumer",
+    "capacity_kw": 30,
+    "current_load_kw": 22,
+    "utilization_ratio": 0.73,
+    "status": "warning",
+    "metadata": {}
+  },
+
+  {
+    "id": "c19",
+    "parent_id": "c10",
+    "name": "House 19",
+    "node_type": "consumer",
+    "capacity_kw": 20,
+    "current_load_kw": 18,
+    "utilization_ratio": 0.9,
+    "status": "critical",
+    "metadata": {}
+  },
+  {
+    "id": "c20",
+    "parent_id": "c10",
+    "name": "House 20",
+    "node_type": "consumer",
+    "capacity_kw": 24,
+    "current_load_kw": 20,
+    "utilization_ratio": 0.83,
+    "status": "warning",
+    "metadata": {}
+  },
+
+  {
+    "id": "s3",
+    "parent_id": "s1",
+    "name": "Solar Unit 3",
+    "node_type": "solar",
+    "capacity_kw": 6,
+    "current_load_kw": 4,
+    "utilization_ratio": 0.66,
+    "status": "normal",
+    "metadata": {}
+  },
+  {
+    "id": "s4",
+    "parent_id": "s1",
+    "name": "Solar Unit 4",
+    "node_type": "solar",
+    "capacity_kw": 7,
+    "current_load_kw": 6,
+    "utilization_ratio": 0.85,
+    "status": "warning",
+    "metadata": {}
+  },
+
+  {
+    "id": "s5",
+    "parent_id": "s2",
+    "name": "Solar Unit 5",
+    "node_type": "solar",
+    "capacity_kw": 10,
+    "current_load_kw": 10,
+    "utilization_ratio": 1.0,
+    "status": "critical",
+    "metadata": {}
+  },
+  {
+    "id": "s6",
+    "parent_id": "s2",
+    "name": "Solar Unit 6",
+    "node_type": "solar",
+    "capacity_kw": 5,
+    "current_load_kw": 2,
+    "utilization_ratio": 0.4,
+    "status": "normal",
+    "metadata": {}
+  },
+
+  {
+    "id": "b3",
+    "parent_id": "b1",
+    "name": "Battery Unit 3",
+    "node_type": "battery",
+    "capacity_kw": 40,
+    "current_load_kw": 35,
+    "utilization_ratio": 0.87,
+    "status": "warning",
+    "metadata": {}
+  },
+  {
+    "id": "b4",
+    "parent_id": "b1",
+    "name": "Battery Unit 4",
+    "node_type": "battery",
+    "capacity_kw": 55,
+    "current_load_kw": 50,
+    "utilization_ratio": 0.9,
+    "status": "critical",
+    "metadata": {}
+  },
+
+  {
+    "id": "b5",
+    "parent_id": "b2",
+    "name": "Battery Unit 5",
+    "node_type": "battery",
+    "capacity_kw": 42,
+    "current_load_kw": 15,
+    "utilization_ratio": 0.35,
+    "status": "normal",
+    "metadata": {}
+  },
+  {
+    "id": "b6",
+    "parent_id": "b2",
+    "name": "Battery Unit 6",
+    "node_type": "battery",
+    "capacity_kw": 48,
+    "current_load_kw": 44,
+    "utilization_ratio": 0.91,
+    "status": "critical",
+    "metadata": {}
+  },
+
+  {
+    "id": "g3",
+    "parent_id": "g1",
+    "name": "Generator 3",
+    "node_type": "generator",
+    "capacity_kw": 110,
+    "current_load_kw": 100,
+    "utilization_ratio": 0.9,
+    "status": "warning",
+    "metadata": {}
+  },
+  {
+    "id": "g4",
+    "parent_id": "g1",
+    "name": "Generator 4",
+    "node_type": "generator",
+    "capacity_kw": 85,
+    "current_load_kw": 72,
+    "utilization_ratio": 0.85,
+    "status": "warning",
+    "metadata": {}
+  },
+
+  {
+    "id": "g5",
+    "parent_id": "g2",
+    "name": "Generator 5",
+    "node_type": "generator",
+    "capacity_kw": 95,
+    "current_load_kw": 60,
+    "utilization_ratio": 0.63,
+    "status": "normal",
+    "metadata": {}
+  },
+  {
+    "id": "g6",
+    "parent_id": "g2",
+    "name": "Generator 6",
+    "node_type": "generator",
+    "capacity_kw": 120,
+    "current_load_kw": 119,
+    "utilization_ratio": 0.99,
+    "status": "critical",
+    "metadata": {}
+  }
+]

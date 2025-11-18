@@ -1,0 +1,128 @@
+[
+  {
+    "id": "root",
+    "parent_id": null,
+    "name": "Main Substation",
+    "node_type": "substation",
+    "capacity_kw": 8000,
+    "current_load_kw": 5300,
+    "utilization_ratio": 0.66,
+    "status": "normal",
+    "metadata": { "region": "north" }
+  },
+
+  {
+    "id": "t1",
+    "parent_id": "root",
+    "name": "Transformer A",
+    "node_type": "transformer",
+    "capacity_kw": 2000,
+    "current_load_kw": 1700,
+    "utilization_ratio": 0.85,
+    "status": "warning",
+    "metadata": { "temp": 72 }
+  },
+  {
+    "id": "t2",
+    "parent_id": "root",
+    "name": "Transformer B",
+    "node_type": "transformer",
+    "capacity_kw": 1800,
+    "current_load_kw": 400,
+    "utilization_ratio": 0.22,
+    "status": "normal",
+    "metadata": {}
+  },
+
+  {
+    "id": "c1",
+    "parent_id": "t1",
+    "name": "Commercial Building",
+    "node_type": "consumer",
+    "capacity_kw": 600,
+    "current_load_kw": 540,
+    "utilization_ratio": 0.9,
+    "status": "overloaded",
+    "metadata": { "floors": 12 }
+  },
+  {
+    "id": "c2",
+    "parent_id": "t1",
+    "name": "House 1",
+    "node_type": "consumer",
+    "capacity_kw": 20,
+    "current_load_kw": 14,
+    "utilization_ratio": 0.7,
+    "status": "normal",
+    "metadata": {}
+  },
+
+  {
+    "id": "t3",
+    "parent_id": "t2",
+    "name": "Transformer C",
+    "node_type": "transformer",
+    "capacity_kw": 1000,
+    "current_load_kw": 850,
+    "utilization_ratio": 0.85,
+    "status": "warning",
+    "metadata": { "maintenance_due": true }
+  },
+  {
+    "id": "t4",
+    "parent_id": "t2",
+    "name": "Transformer D",
+    "node_type": "transformer",
+    "capacity_kw": 900,
+    "current_load_kw": 0,
+    "utilization_ratio": 0.0,
+    "status": "offline",
+    "metadata": {}
+  },
+
+  {
+    "id": "c3",
+    "parent_id": "t3",
+    "name": "Farm",
+    "node_type": "consumer",
+    "capacity_kw": 80,
+    "current_load_kw": 60,
+    "utilization_ratio": 0.75,
+    "status": "normal",
+    "metadata": { "animals": 120 }
+  },
+  {
+    "id": "c4",
+    "parent_id": "t3",
+    "name": "Factory Sector A",
+    "node_type": "consumer",
+    "capacity_kw": 700,
+    "current_load_kw": 690,
+    "utilization_ratio": 0.99,
+    "status": "overloaded",
+    "metadata": { "shifts": 3 }
+  },
+
+  {
+    "id": "c5",
+    "parent_id": "t4",
+    "name": "Abandoned Complex",
+    "node_type": "consumer",
+    "capacity_kw": 40,
+    "current_load_kw": 0,
+    "utilization_ratio": 0,
+    "status": "offline",
+    "metadata": {}
+  },
+  {
+    "id": "c6",
+    "parent_id": "t4",
+    "name": "Warehouse",
+    "node_type": "consumer",
+    "capacity_kw": 50,
+    "current_load_kw": 20,
+    "utilization_ratio": 0.4,
+    "status": "unknown",
+    "metadata": {}
+  }
+]

@@ -159,3 +159,40 @@ section#simulation form button:hover,
 section#change-node form button:hover {
     background-color: var(--hover);
 }
+
+#tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    max-width: 260px;
+    line-height: 1.4;
+}
+
+.tree-container svg {
+    max-width: 100%;
+    height: auto;
+}
+
+.hidden {
+    display: none;
+}
+
+.node-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.node-text {
+  font-size: 0.5rem;
+  fill: black;
+}
+
+.link {
+    fill: none;
+    stroke: #999;
+    stroke-width: 1px;
+}
