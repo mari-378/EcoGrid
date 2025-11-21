@@ -91,9 +91,12 @@ function buildTree(root, g) {
   g.selectAll("*").remove();
 
   // criação dos links (ou seja, das arestas entre os nós)
-  g.selectAll(".link") // ele não existe ainda, é criado
+  const links = g
+    .selectAll(".link-group")
     .data(root.links())
-    .enter();
+    .enter()
+    .append("g")
+    .attr("class", "link-group");
 
   // path da aresta
   links
@@ -116,11 +119,8 @@ function buildTree(root, g) {
     .attr("dy", -5)
     .text((d) => d.target.data.resistance ?? "")
     .attr("transform", function (d) {
-      // pega coordenadas do source e target
       const x = (d.source.x + d.target.x) / 2;
       const y = (d.source.y + d.target.y) / 2;
-
-      // ajusta posição de acordo com seu offset de x (-16)
       return `translate(${y - 16},${x})`;
     });
 
