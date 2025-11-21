@@ -297,52 +297,72 @@ simulationForm.addEventListener("submit", async (e) => {
 const changeForm = document.querySelector("#change-node form");
 
 changeForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const formData = new FormData(changeForm);
+  const formData = new FormData(changeForm);
 
-    const payload = {
-        id: formData.get("node-for-change"),
-        capacity_kw: formData.get("capacity-kw") === "" ? null : Number(formData.get("capacity-kw")),
-        current_load_kw: formData.get("current_load_kw") === "" ? null : Number(formData.get("current_load_kw"))
-    };
+  const nodeId = formData.get("node-for-change");
+  const action = formData.get("opcoes");
+  const newValue = formData.get("new-value");
 
-    try {
-        const response = await fetch(`${BASE_URL}/change-node`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        });
+  // o payload é montado de acordo com a ação escolhida
+  const payload = { id: nodeId };
 
-        const result = await response.json();
+  if (action === "capacity-kw") {
+    payload.capacity_kw = newValue === "" ? null : Number(newValue);
+  }
 
-        const logsContainer = document.querySelector("#change-node .logs-container");
-        logsContainer.innerHTML = "<h3>Logs</h3>";
+  if (action === "current_load_kw") {
+    payload.current_load_kw = newValue === "" ? null : Number(newValue);
+  }
 
-        if (Array.isArray(result.logs)) {
-            result.logs.forEach(log => {
-                const p = document.createElement("p");
-                p.textContent = log;
-                logsContainer.appendChild(p);
-            });
-        } else {
-            const p = document.createElement("p");
-            p.textContent = "Nenhum log recebido.";
-            logsContainer.appendChild(p);
-        }
+  if (action === "delete-node") {
+    payload.delete = true;
+  }
 
-        const treeContainer = document.querySelector("#change-node .tree-container");
-        treeContainer.innerHTML = "";
+  if (action === "change-parent") {
+    payload.new_parent = newValue;
+  }
 
-        const { g } = createSVG(treeContainer);
+  try {
+    const response = await fetch(`${BASE_URL}/change-node`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
 
-        const newRoot = buildHierarchy(result.tree);
-        buildTree(newRoot, g);
+    const result = await response.json();
 
-    } catch (err) {
-        console.error(err);
-        alert("Erro ao aplicar alterações no nó.");
+    const logsContainer = document.querySelector(
+      "#change-node .logs-container"
+    );
+    logsContainer.innerHTML = "<h3>Logs</h3>";
+
+    if (Array.isArray(result.logs)) {
+      result.logs.forEach((log) => {
+        const p = document.createElement("p");
+        p.textContent = log;
+        logsContainer.appendChild(p);
+      });
+    } else {
+      const p = document.createElement("p");
+      p.textContent = "Nenhum log recebido.";
+      logsContainer.appendChild(p);
     }
+
+    const treeContainer = document.querySelector(
+      "#change-node .tree-container"
+    );
+    treeContainer.innerHTML = "";
+
+    const { g } = createSVG(treeContainer);
+
+    const newRoot = buildHierarchy(result.tree);
+    buildTree(newRoot, g);
+  } catch (err) {
+    console.error(err);
+    alert("Erro ao aplicar alterações no nó.");
+  }
 });
