@@ -8,6 +8,7 @@
     "current_load_kw": 5300,
     "utilization_ratio": 0.66,
     "status": "normal",
+    "resistance": null,
     "metadata": { "region": "north" }
   },
 
@@ -20,9 +21,10 @@
     "current_load_kw": 1700,
     "utilization_ratio": 0.85,
     "status": "warning",
+    "resistance": 3.2,
     "metadata": { "temp": 72 }
   },
-  
+
   {
     "id": "t2",
     "parent_id": "root",
@@ -32,6 +34,7 @@
     "current_load_kw": 400,
     "utilization_ratio": 0.22,
     "status": "normal",
+    "resistance": 2.8,
     "metadata": {}
   },
 
@@ -44,9 +47,10 @@
     "current_load_kw": 540,
     "utilization_ratio": 0.9,
     "status": "overloaded",
+    "resistance": 1.1,
     "metadata": { "floors": 12 }
   },
-  
+
   {
     "id": "c2",
     "parent_id": "t1",
@@ -56,6 +60,7 @@
     "current_load_kw": 14,
     "utilization_ratio": 0.7,
     "status": "normal",
+    "resistance": 0.4,
     "metadata": {}
   },
 
@@ -68,6 +73,7 @@
     "current_load_kw": 850,
     "utilization_ratio": 0.85,
     "status": "warning",
+    "resistance": 3.8,
     "metadata": { "maintenance_due": true }
   },
   {
@@ -79,6 +85,7 @@
     "current_load_kw": 0,
     "utilization_ratio": 0.0,
     "status": "offline",
+    "resistance": 4.0,
     "metadata": {}
   },
 
@@ -91,6 +98,7 @@
     "current_load_kw": 60,
     "utilization_ratio": 0.75,
     "status": "normal",
+    "resistance": 0.9,
     "metadata": { "animals": 120 }
   },
   {
@@ -102,6 +110,7 @@
     "current_load_kw": 690,
     "utilization_ratio": 0.99,
     "status": "overloaded",
+    "resistance": 1.6,
     "metadata": { "shifts": 3 }
   },
 
@@ -114,6 +123,7 @@
     "current_load_kw": 0,
     "utilization_ratio": 0,
     "status": "offline",
+    "resistance": 0.2,
     "metadata": {}
   },
   {
@@ -125,6 +135,7 @@
     "current_load_kw": 20,
     "utilization_ratio": 0.4,
     "status": "unknown",
+    "resistance": 0.7,
     "metadata": {}
   }
 ]
