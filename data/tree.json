@@ -22,6 +22,7 @@
     "status": "warning",
     "metadata": { "temp": 72 }
   },
+  
   {
     "id": "t2",
     "parent_id": "root",
@@ -45,6 +46,7 @@
     "status": "overloaded",
     "metadata": { "floors": 12 }
   },
+  
   {
     "id": "c2",
     "parent_id": "t1",
