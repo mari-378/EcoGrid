@@ -71,13 +71,18 @@
                 </div>
 
                 <div>
-                    <label for="capacity-kw">Capacidade nominal em kW: </label>
-                    <input type="number" name="capacity-kw">
+                    <label for="opcoes">Escolha o que você deseja mudar: </label>
+                    <select name="opcoes" id="opcoes">
+                        <option value="capacity-kw">Capacidade nominal em kW</option>
+                        <option value="current_load_kw">Carga atual em kW</option>
+                        <option value="delete-node">Deletar nó</option>
+                        <option value="change-parent">Trocar o pai do nó</option>
+                    </select>
                 </div>
-                
+
                 <div>
-                    <label for="current_load_kw">Carga atual em kW: </label>
-                    <input type="number" name="current_load_kw">
+                    <label for="new-value">Novo valor: </label>
+                    <input type="text" name="new-value">
                 </div>
                 
                 <button type="submit">Enviar</button>
