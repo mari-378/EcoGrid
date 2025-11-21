@@ -164,6 +164,7 @@ function buildTree(root, g) {
     .attr("text-anchor", "middle")
     .text((d) => d.data.name);
 
+  // retângulo de fundo (cor baseada no status)
   node
     .insert("rect", "image")
     .attr("x", -18)
@@ -171,6 +172,28 @@ function buildTree(root, g) {
     .attr("width", 24)
     .attr("height", 20)
     .attr("rx", 6)
+    .attr("fill", (d) => statusColors[d.data.status] || "#fff");
+
+  // barra de fundo (base) acima do nó
+  node
+    .append("rect")
+    .attr("class", "util-bar-bg")
+    .attr("x", -20)
+    .attr("y", -22)
+    .attr("width", 40)
+    .attr("height", 4)
+    .attr("rx", 2)
+    .attr("fill", "#ddd");
+
+  // barra preenchida (proporcional + cor baseada no status)
+  node
+    .append("rect")
+    .attr("class", "util-bar-fill")
+    .attr("x", -20)
+    .attr("y", -22)
+    .attr("height", 4)
+    .attr("rx", 2)
+    .attr("width", (d) => 40 * (d.data.utilization_ratio ?? 0)) // proporção
     .attr("fill", (d) => statusColors[d.data.status] || "#fff");
 }
 
