@@ -83,75 +83,95 @@ function buildHierarchy(flatData) {
 
 // função para criar a árvore de fato, baseada nos dados fornecidos
 function buildTree(root, g) {
-    const treeLayout = d3.tree().size([height * 0.9, width * 0.4]); // aqui muda a distância entre os nós
-                                        // eixo y      eixo x
-    treeLayout(root);
+  const treeLayout = d3.tree().size([height * 0.9, width * 0.4]); // aqui muda a distância entre os nós
+  // eixo y      eixo x
+  treeLayout(root);
 
-    // limpa qualquer árvore antiga
-    g.selectAll("*").remove();
+  // limpa qualquer árvore antiga
+  g.selectAll("*").remove();
 
-    // criação dos links (ou seja, das arestas entre os nós)
-    g.selectAll(".link") // ele não existe ainda, é criado
-        .data(root.links())
-        .enter()
-        .append("path")
-        .attr("class", "link")
-        .attr(
-            "d",
-            d3
-                .linkHorizontal()
-                .x((d) => d.y - 16)
-                .y((d) => d.x)
-            );
+  // criação dos links (ou seja, das arestas entre os nós)
+  g.selectAll(".link") // ele não existe ainda, é criado
+    .data(root.links())
+    .enter();
 
-    // criação dos nós
-    const node = g
-        .selectAll(".node") // ainda não existe
-        .data(root.descendants())
-        .enter()
-        .append("g")
-        .attr("class", "node")
-        .attr("transform", (d) => `translate(${d.y},${d.x})`)
-        .on("mouseover", function (e, d) {
-            tooltip
-                .classed("hidden", false)
-                .html(formatTooltip(d.data))
-                .style("left", e.pageX + 15 + "px")
-                .style("top", e.pageY + 15 + "px");
-        })
-        .on("mousemove", (e) => {
-            tooltip
-                .style("left", e.pageX + 15 + "px")
-                .style("top", e.pageY + 15 + "px");
-        })
-        .on("mouseout", () => {
-            tooltip.classed("hidden", true);
-        });
+  // path da aresta
+  links
+    .append("path")
+    .attr("class", "link")
+    .attr(
+      "d",
+      d3
+        .linkHorizontal()
+        .x((d) => d.y - 16)
+        .y((d) => d.x)
+    );
 
-    // adiciona as imagens para representar cada nó!
-    node
-        .append("image")
-        .attr("href", (d) => icons[d.data.node_type] || icons.default)
-        .attr("class", "node-icon")
-        .attr("x", -16)
-        .attr("y", -10);
+  // texto da resistência nas arestas
+  links
+    .append("text")
+    .attr("class", "link-label")
+    .attr("font-size", 12)
+    .attr("fill", "#333")
+    .attr("dy", -5)
+    .text((d) => d.target.data.resistance ?? "")
+    .attr("transform", function (d) {
+      // pega coordenadas do source e target
+      const x = (d.source.x + d.target.x) / 2;
+      const y = (d.source.y + d.target.y) / 2;
 
-    // adiciona os títulos (que serão as chaves "nome" de cada nó)
-    node
-        .append("text")
-        .attr("class", "node-text")
-        .attr("dy", 14)
-        .attr("text-anchor", "middle")
-        .text((d) => d.data.name);
+      // ajusta posição de acordo com seu offset de x (-16)
+      return `translate(${y - 16},${x})`;
+    });
 
-    node
-        .insert("rect", "image")
-        .attr("x", -18)
-        .attr("y", -12)
-        .attr("width", 24)
-        .attr("height", 20)
-        .attr("rx", 6)
-        .attr("fill", (d) => statusColors[d.data.status] || "#fff");
+  // criação dos nós
+  const node = g
+    .selectAll(".node") // ainda não existe
+    .data(root.descendants())
+    .enter()
+    .append("g")
+    .attr("class", "node")
+    .attr("transform", (d) => `translate(${d.y},${d.x})`)
+    .on("mouseover", function (e, d) {
+      tooltip
+        .classed("hidden", false)
+        .html(formatTooltip(d.data))
+        .style("left", e.pageX + 15 + "px")
+        .style("top", e.pageY + 15 + "px");
+    })
+    .on("mousemove", (e) => {
+      tooltip
+        .style("left", e.pageX + 15 + "px")
+        .style("top", e.pageY + 15 + "px");
+    })
+    .on("mouseout", () => {
+      tooltip.classed("hidden", true);
+    });
+
+  // adiciona as imagens para representar cada nó!
+  node
+    .append("image")
+    .attr("href", (d) => icons[d.data.node_type] || icons.default)
+    .attr("class", "node-icon")
+    .attr("x", -16)
+    .attr("y", -10);
+
+  // adiciona os títulos (que serão as chaves "nome" de cada nó)
+  node
+    .append("text")
+    .attr("class", "node-text")
+    .attr("dy", 14)
+    .attr("text-anchor", "middle")
+    .text((d) => d.data.name);
+
+  node
+    .insert("rect", "image")
+    .attr("x", -18)
+    .attr("y", -12)
+    .attr("width", 24)
+    .attr("height", 20)
+    .attr("rx", 6)
+    .attr("fill", (d) => statusColors[d.data.status] || "#fff");
 }
 
 // função que formata o tooltip, ou seja, o quadrado c/ as infos adicionais
