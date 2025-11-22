@@ -29,7 +29,7 @@
             <h2>Escolha um evento para simular</h2>
             <p>Obs: o programa forçará o evento a acontecer no nó em questão!</p>
 
-            <form action="">
+            <form id="form">
                 <div>
                     <label for="sim-chosen-node">Digite o id do nó escolhido: </label>
                     <input type="text" name="sim-chosen-node" id="chosen-node" required>
@@ -45,9 +45,10 @@
                     <input type="radio" name="simulation-choice" value="consumption-peak" id="consumption-peak">
                     <label for="consumption-peak">Pico de consumo</label>
                 </div>
-
-                <button type="submit">Enviar</button>
             </form>
+
+            <button type="submit" form="form">Simular</button>
+            <button type="button" id="stop-simulation">Finalizar</button>
 
             <div class="tree-logs-container">
                 <div class="tree-container"></div>

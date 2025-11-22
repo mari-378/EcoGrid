@@ -221,77 +221,85 @@ function formatTooltip(obj) {
     return html;
 }
 
-const BASE_URL = "http://localhost:3000";
-
-
 // lógica da seção de simulação
-const simulationForm = document.querySelector("#simulation form");
+let socket = null;
+let simulationRunning = false;
 
-simulationForm.addEventListener("submit", async (e) => {
-    e.preventDefault(); // impede recarregar a página
+const simulationForm = document.querySelector("form");
+const stopBtn = document.getElementById("stop-simulation");
 
-    const chosenNode = document.querySelector("#chosen-node").value;
-    const simulationChoice = document.querySelector(
-        "input[name='simulation-choice']:checked"
-    )?.value;
+simulationForm.addEventListener("submit", (e) => {
+  e.preventDefault();
 
-    if (!simulationChoice) {
-        alert("Escolha um tipo de simulação!");
-        return;
+  if (simulationRunning) {
+    alert("Simulação já está rodando!");
+    return;
+  }
+
+  const chosenNode = document.querySelector("#chosen-node").value;
+  const simulationChoice = document.querySelector(
+    "input[name='simulation-choice']:checked"
+  )?.value;
+
+  if (!simulationChoice) {
+    alert("Escolha um tipo de simulação!");
+    return;
+  }
+
+  const payload = {
+    id: chosenNode,
+    simulation_type: simulationChoice,
+  };
+
+  // cria websocket
+  socket = new WebSocket("ws://localhost:3000/ws/simulation");
+
+  socket.onopen = () => {
+    simulationRunning = true;
+    socket.send(JSON.stringify(payload));
+  };
+
+  socket.onmessage = (event) => {
+    const result = JSON.parse(event.data);
+
+    // logs
+    const logsContainer = document.querySelector("#simulation .logs-container");
+    logsContainer.innerHTML = "<h3>Logs</h3>";
+
+    if (Array.isArray(result.logs)) {
+      result.logs.forEach((log) => {
+        const p = document.createElement("p");
+        p.textContent = log;
+        logsContainer.appendChild(p);
+      });
     }
 
-    const payload = {
-        id: chosenNode,
-        simulation_type: simulationChoice,
-    };
+    // renderizar árvore atualizada
+    const treeContainer = document.querySelector("#simulation .tree-container");
+    treeContainer.innerHTML = "";
 
-    try {
-        const response = await fetch(`${BASE_URL}/simulation`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        });
+    const { g } = createSVG(treeContainer);
+    const newRoot = buildHierarchy(result.tree);
+    buildTree(newRoot, g);
+  };
 
-        const result = await response.json();
+  socket.onerror = (err) => {
+    console.error("Erro WebSocket:", err);
+    alert("Falha na simulação.");
+  };
 
-        // adiciona os logs recebidos do back
-        const logsContainer = document.querySelector("#simulation .logs-container");
-        logsContainer.innerHTML = "<h3>Logs</h3>"; // limpa e deixa o título
-
-        if (Array.isArray(result.logs)) {
-        result.logs.forEach((log) => {
-            const p = document.createElement("p");
-            p.textContent = log;
-            logsContainer.appendChild(p);
-        });
-        } else {
-            const p = document.createElement("p");
-            p.textContent = "Nenhum log recebido.";
-            logsContainer.appendChild(p);
-        }
-
-        // cria nova árvore e adiciona ao container
-        const treeContainer = document.querySelector("#simulation .tree-container");
-
-        // remove qualquer SVG antigo
-        treeContainer.innerHTML = "";
-
-        // cria um SVG novo dentro da seção de simulação
-        const { g } = createSVG(treeContainer);
-
-        // chama a função buildHierarchy com o novo json recebido
-        const newRoot = buildHierarchy(result.tree);
-
-        // desenha a nova árvore
-        buildTree(newRoot, g);
-    } catch (err) {
-        console.error(err);
-        alert("Erro ao enviar simulação.");
-    }
+  socket.onclose = () => {
+    simulationRunning = false;
+  };
 });
 
+// botão para parar simulação
+stopBtn.addEventListener("click", () => {
+  if (socket) {
+    socket.send(JSON.stringify({ stop: true }));
+    socket.close();
+  }
+});
 
 // lógica da seção de change-node
 const changeForm = document.querySelector("#change-node form");

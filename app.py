@@ -1,61 +1,105 @@
-from flask import Flask, jsonify, request, render_template 
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request
+from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+import asyncio
+import json
 
-app = Flask(__name__)
+# trocar depois para as funções reais do projeto!!! TEMPORÁRIO 
+from tree import (
+    get_initial_tree,
+    alterar_capacidade_no,
+    alterar_carga_no,
+    deletar_no,
+    alterar_pai_no
+)
 
-@app.route('/', methods=['GET'])
-def home():
-    return render_template('index.html')
+# trocar depois para as funções reais do projeto!!! TEMPORÁRIO 
+from simulation import (
+    sim_sobrecarga,
+    sim_falha_no,
+    sim_pico_consumo
+)
 
-@app.route('/tree', methods=['POST'])
-def tree():
-    '''endpoint para enviar a árvore completa inicial para o frontend'''
+# configuração do FastAPI
+app = FastAPI()
 
-@app.route('/simulation', methods=['POST'])
-def simulation():
-    '''endpoint para receber os dados da simulação do frontend e retornar os resultados'''
-    data = request.get_json()
-    if not data:
-        return jsonify({"error": "Nenhum dado enviado"}), 400
-    
-    id_do_no, tipo_de_simulacao  = data.get('id'), data.get('simulation_type')
-    if not id_do_no or not tipo_de_simulacao:
-        return jsonify({"error": "Parâmetros insuficientes"}), 400
-    
-    if tipo_de_simulacao == 'overload':
-        nova_arvore = sim_sobrecarga(id_do_no)
-    elif tipo_de_simulacao == 'node-failure':
-        nova_arvore = sim_falha_no(id_do_no)
-    elif tipo_de_simulacao == 'consumption-peak':
-        nova_arvore = sim_pico_consumo(id_do_no)
+# configuração dos diretórios de arquivos estáticos e templates
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
+
+# rota principal que renderiza o template HTML
+@app.get("/")
+def home(request: Request):
+    '''função que renderiza o template HTML principal'''
+    return templates.TemplateResponse("index.html", {"request": request})
+
+# rota para enviar a árvore inicial
+@app.post("/tree")
+async def tree():
+    """função que retorna a árvore completa inicial."""
+    arvore = get_initial_tree()
+    return JSONResponse(arvore)
+
+# rota para o WebSocket de simulação
+@app.websocket("/simulation")
+async def simulation_socket(ws: WebSocket):
+    """função que mantém streaming da árvore simulada até o cliente encerrar."""
+    await ws.accept()
+
+    try:
+        # recebe parâmetros iniciais
+        data = await ws.receive_text()
+        data = json.loads(data)
+
+        id_no = data.get("id")
+        tipo = data.get("simulation_type")
+
+        if not id_no or not tipo:
+            await ws.send_text(json.dumps({"error": "Parâmetros insuficientes"}))
+            return
+
+        # loop que envia a nova árvore a cada segundo
+        while True:
+            if tipo == "overload":
+                arvore = sim_sobrecarga(id_no)
+
+            elif tipo == "node-failure":
+                arvore = sim_falha_no(id_no)
+
+            elif tipo == "consumption-peak":
+                arvore = sim_pico_consumo(id_no)
+
+            else:
+                arvore = {"error": "Tipo de simulação inválido"}
+
+            await ws.send_json(arvore)
+            await asyncio.sleep(1)
+
+    except WebSocketDisconnect:
+        print("Simulação encerrada — WebSocket desconectado.")
+
+# rota para alterar atributos de um nó específico
+@app.post("/change-node")
+async def change_node(data: dict):
+    """função que altera atributos de um nó específico."""
+    id_no = data.get("id")
+    if not id_no:
+        return JSONResponse({"error": "ID do nó não fornecido"}, status_code=400)
+
+    if "capacity_kw" in data:
+        nova_arvore = alterar_capacidade_no(id_no, data["capacity_kw"])
+
+    elif "current_load_kw" in data:
+        nova_arvore = alterar_carga_no(id_no, data["current_load_kw"])
+
+    elif "delete_node" in data:
+        nova_arvore = deletar_no(id_no)
+
+    elif "new_parent" in data:
+        nova_arvore = alterar_pai_no(id_no, data["new_parent"])
+
     else:
-        return jsonify({"error": "Tipo de simulação inválido"}), 400
-    
-    return jsonify(nova_arvore), 200
+        return JSONResponse({"error": "Nenhuma ação válida fornecida"}, status_code=400)
 
-@app.route('/change-node', methods=['POST'])
-def change_node():
-    '''endpoint para alterar um nó específico na árvore'''
-    data = request.get_json()
-    if not data:
-        return jsonify({"error": "Nenhum dado enviado"}), 400
-    
-    id_do_no = data.get('id')
-    if not id_do_no:
-        return jsonify({"error": "ID do nó não fornecido"}), 400
-
-    if 'capacity_kw' in data:
-        nova_capacidade = data['capacity_kw']
-        nova_arvore = alterar_capacidade_no(id_do_no, nova_capacidade)
-    elif 'current_load_kw' in data:
-        nova_carga = data['current_load_kw']
-        nova_arvore = alterar_carga_no(id_do_no, nova_carga)
-    elif 'delete_node' in data:
-        nova_arvore = deletar_no(id_do_no)
-    elif 'new_parent' in data:
-        novo_pai = data['new_parent']
-        nova_arvore = alterar_pai_no(id_do_no, novo_pai)
-    else:
-        return jsonify({"error": "Nenhuma ação válida fornecida"}), 400
-    
-    return jsonify(nova_arvore), 200
-    
+    return JSONResponse(nova_arvore)
