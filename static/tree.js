@@ -3,10 +3,10 @@ const btnLoadTree = document.getElementById("btn-load-tree");
 
 // importação das imagens de cada tipo de nó!
 const icons = {
-    substation: "/icons/substation.png",
-    transformer: "/icons/transformer.png",
-    consumer: "/icons/consumer.png",
-    default: "/icons/default.png"
+    substation: "/static/icons/substation.png",
+    transformer: "/static/icons/transformer.png",
+    consumer: "/static/icons/consumer.png",
+    default: "/static/icons/default.png"
 };
 
 const statusColors = {
@@ -60,13 +60,13 @@ btnLoadTree.addEventListener("click", (e) => {
     const { g } = createSVG(e.target);
 
     // carregando o json
-    fetch("data/tree.json")
-        .then((response) => response.json())
-        .then((data) => {
-            const root = buildHierarchy(data);
-            buildTree(root, g);
-        })
-        .catch((err) => console.error("Erro ao carregar JSON:", err));
+    fetch("/static/data/tree.json")
+      .then((response) => response.json())
+      .then((data) => {
+        const root = buildHierarchy(data);
+        buildTree(root, g);
+      })
+      .catch((err) => console.error("Erro ao carregar JSON:", err));
 });
 
 // função para transformar o json flat recebido em uma hierarquia
