@@ -1,10 +1,10 @@
-from flask import jsonify, request
+from flask import Flask, jsonify, request, render_template 
 
 app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def home():
-    return "Servidor funcionando!", 200
+    return render_template('index.html')
 
 @app.route('/tree', methods=['POST'])
 def tree():
