@@ -1,9 +1,6 @@
-# simulation.py
-
+# APENAS TESTE INICIAL DE FUNCIONAMENTO!!!!
 import copy
 from .tree import CURRENT_TREE_STATE, _get_node, _recalculate_all_loads_and_statuses, _update_tree_state
-
-# --- Funções de Simulação ---
 
 def sim_sobrecarga(id_no):
     """Simula uma sobrecarga: Aumenta a carga para 120% da capacidade."""

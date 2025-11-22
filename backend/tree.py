@@ -1,8 +1,5 @@
-# tree.py
-
+# APENAS TESTE INICIAL DE FUNCIONAMENTO!!!!
 import json
-
-# --- Estrutura de Dados de Teste ---
 
 # Árvore inicial (flat list) para simular o estado do sistema
 INITIAL_TREE = [
@@ -65,8 +62,6 @@ INITIAL_TREE = [
 
 # Variável para manter o estado atual da árvore no backend (muito importante para simulação!)
 CURRENT_TREE_STATE = list(INITIAL_TREE)
-
-# --- Funções de Ajuda ---
 
 def _get_node(tree, node_id):
     """Retorna o nó pelo ID ou None."""
@@ -147,7 +142,6 @@ def _recalculate_all_loads_and_statuses(tree):
     logs.append("Status e utilização de todos os nós recalculados.")
     return logs
 
-# --- Funções do Projeto ---
 
 def get_initial_tree():
     """Retorna a árvore inicial. Aqui, inicializa o estado."""
