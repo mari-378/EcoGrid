@@ -6,7 +6,7 @@ import asyncio
 import json
 
 # trocar depois para as funções reais do projeto!!! TEMPORÁRIO 
-from tree import (
+from backend.tree import (
     get_initial_tree,
     alterar_capacidade_no,
     alterar_carga_no,
@@ -15,7 +15,7 @@ from tree import (
 )
 
 # trocar depois para as funções reais do projeto!!! TEMPORÁRIO 
-from simulation import (
+from backend.simulation import (
     sim_sobrecarga,
     sim_falha_no,
     sim_pico_consumo
@@ -25,18 +25,24 @@ from simulation import (
 app = FastAPI()
 
 # configuração dos diretórios de arquivos estáticos e templates
+# o caminho para o static deve ser /static/
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 # rota principal que renderiza o template HTML
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 def home(request: Request):
     '''função que renderiza o template HTML principal'''
-    return templates.TemplateResponse("index.html", {"request": request})
+    # adicionando a URL base no contexto para uso no JS
+    base_url = f"http://{request.url.netloc}"
+    return templates.TemplateResponse(
+        "index.html",
+        {"request": request, "base_url": base_url}
+    )
 
 # rota para enviar a árvore inicial
 @app.post("/tree")
-async def tree():
+async def get_tree():
     """função que retorna a árvore completa inicial."""
     arvore = get_initial_tree()
     return JSONResponse(arvore)
@@ -61,6 +67,8 @@ async def simulation_socket(ws: WebSocket):
 
         # loop que envia a nova árvore a cada segundo
         while True:
+            # as funções de simulação devem retornar a árvore completa (flat list) E os logs.
+            # ex: {'tree': [...], 'logs': [...]}
             if tipo == "overload":
                 arvore = sim_sobrecarga(id_no)
 
@@ -72,12 +80,22 @@ async def simulation_socket(ws: WebSocket):
 
             else:
                 arvore = {"error": "Tipo de simulação inválido"}
-
+            
             await ws.send_json(arvore)
             await asyncio.sleep(1)
 
     except WebSocketDisconnect:
         print("Simulação encerrada — WebSocket desconectado.")
+    except Exception as e:
+        print(f"Erro na simulação: {e}")
+        try:
+            await ws.send_json({"error": str(e)})
+        except:
+            pass
+    finally:
+        # garante que a conexão será fechada se houver um erro antes do loop
+        if ws.client_state.name == 'CONNECTED':
+             await ws.close()
 
 # rota para alterar atributos de um nó específico
 @app.post("/change-node")
@@ -87,13 +105,17 @@ async def change_node(data: dict):
     if not id_no:
         return JSONResponse({"error": "ID do nó não fornecido"}, status_code=400)
 
+    # as funções de alteração devem retornar a nova árvore completa (flat list) E os logs.
+    # ex: {'tree': [...], 'logs': [...]}
+    nova_arvore = None
+
     if "capacity_kw" in data:
         nova_arvore = alterar_capacidade_no(id_no, data["capacity_kw"])
 
     elif "current_load_kw" in data:
         nova_arvore = alterar_carga_no(id_no, data["current_load_kw"])
 
-    elif "delete_node" in data:
+    elif data.get("delete_node") is True:
         nova_arvore = deletar_no(id_no)
 
     elif "new_parent" in data:
@@ -101,5 +123,8 @@ async def change_node(data: dict):
 
     else:
         return JSONResponse({"error": "Nenhuma ação válida fornecida"}, status_code=400)
+
+    if nova_arvore and "error" in nova_arvore:
+         return JSONResponse(nova_arvore, status_code=400)
 
     return JSONResponse(nova_arvore)
