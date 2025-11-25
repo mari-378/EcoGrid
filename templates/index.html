@@ -58,15 +58,15 @@
 
         <section id="change-node">
             <h2>Altere atributos de um nó</h2>
-            <p>Aqui você poderá alterar o valor de um ou mais atributos do nó selecionado
+            <p>Aqui você poderá alterar o valor de um atributo do nó selecionado
                 e ver como o sistema responde às suas mudanças!
             </p>
-            <p>Deixe o campo vazio se não quiser que nenhuma mudança seja feita</p>
 
             <form id="change-node-form"> 
                 <div>
                     <label for="node-for-change">Digite o id do nó escolhido: </label>
                     <input type="text" name="node-for-change" required>
+                    <p>Obs: se for adicionar um novo nó, o id digitado deve ser do pai</p>
                 </div>
 
                 <div>
@@ -74,6 +74,7 @@
                     <select name="opcoes" id="opcoes">
                         <option value="capacity-kw">Capacidade nominal em kW</option>
                         <option value="current_load_kw">Carga atual em kW</option>
+                        <option value="add-node">Adicionar nó</option>
                         <option value="delete-node">Deletar nó</option>
                         <option value="change-parent">Trocar o pai do nó</option>
                     </select>
