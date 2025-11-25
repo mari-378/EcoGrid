@@ -23,6 +23,9 @@ export function setupChangeNode(changeForm, BASE_URL) {
       if (isNaN(value)) return alert("Carga atual deve ser um número.");
       payload.current_load_kw = value;
 
+    } else if (action === "add-node") {
+      payload.add_node = true;
+
     } else if (action === "delete-node") {
       payload.delete_node = true;
 
