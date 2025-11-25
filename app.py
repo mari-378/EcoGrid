@@ -10,6 +10,7 @@ from backend.tree import (
     get_initial_tree,
     alterar_capacidade_no,
     alterar_carga_no,
+    adicionar_no,
     deletar_no,
     alterar_pai_no
 )
@@ -114,6 +115,9 @@ async def change_node(data: dict):
 
     elif "current_load_kw" in data:
         nova_arvore = alterar_carga_no(id_no, data["current_load_kw"])
+
+    elif data.get("add_node") is True:
+        nova_arvore = adicionar_no(id_no) # o id enviado aqui é o do pai!!
 
     elif data.get("delete_node") is True:
         nova_arvore = deletar_no(id_no)
