@@ -195,6 +195,9 @@ def alterar_carga_no(id_no, nova_carga):
     
     return _update_tree_state(new_tree)
 
+def adicionar_no(id_do_pai):
+    return # aqui seria a função para adicionar um novo nó
+
 def deletar_no(id_no):
     """Deleta um nó e seus filhos, e recalcula o estado."""
     new_tree = [dict(node) for node in CURRENT_TREE_STATE]
