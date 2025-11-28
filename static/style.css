@@ -179,8 +179,8 @@ section#change-node form button:hover {
 #tooltip {
     position: absolute;
     pointer-events: none;
-    background: rgba(0,0,0,0.85);
-    color: #fff;
+    background: var(--fundo-logs);
+    color: var(--escuro);
     padding: 8px 12px;
     border-radius: 6px;
     font-size: 13px;
