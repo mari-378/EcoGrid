@@ -5,19 +5,21 @@
 }
 
 :root {
-    --fundo: #FBF8EF;
-    --fundo-logs: #ffdca3;
-    --hover: #defafd;
-    --claro: #B4EBE6;
-    --medio: #80CBC4;
-    --escuro: #FFB433;
-    --borda: #57B4BA;
+    --fundo: #C8ACD6;
+    --fundo-logs: #EBD3F8;
+    --hover: #DCD7C9;
+    --claro: #433D8B;
+    --medio: #362981;
+    --escuro: #17153B;
+    --borda: #7b71db;
     --sombra: #14141469;
+    --branco: #f1f1f1;
 }
 
 body {
     font-size: 16px;
     font-family: 'Times New Roman', Times, serif;
+    color: var(--branco);
 }
 
 header {
@@ -41,13 +43,13 @@ ul.nav-links li {
 }
 
 ul.nav-links li a {
-    color: black;
+    color: var(--branco);
     text-decoration: none;
     transition: color .3s ease;
 }
 
 ul.nav-links li a:hover {
-    color: rgba(0, 0, 0, 0.5);
+    color: var(--hover);
 }
 
 main.grid {
@@ -76,6 +78,8 @@ section#tree div.tree-container {
     margin: 0 auto;
     margin-bottom: 1.5rem;
     box-shadow: 0.1rem 0.1rem 0.5rem var(--sombra);
+    display: flex;
+    flex-direction: column;
 }
 
 main.grid section#simulation {
@@ -103,6 +107,13 @@ section#change-node form {
     flex-direction: column;
     gap: 1rem;
     margin-top: 1rem;
+}
+
+form input[type="text"] {
+    background-color: var(--fundo);
+    width: 10%;
+    border-radius: 1rem;
+    border: none;
 }
 
 .tree-logs-container {
@@ -143,15 +154,20 @@ section#change-node form {
 }
 
 section#tree button#btn-load-tree,
-section#simulation form button,
+section#simulation button,
 section#change-node form button {
-    width: 5rem;
+    width: 10rem;
     padding: 0.2rem;
     border: 0.1rem solid var(--borda);
     box-shadow: 0.05rem 0.05rem 0.1rem var(--sombra);
     border-radius: 0.3rem;
     transition: background-color .3s ease;
     cursor: pointer;
+}
+
+section#simulation div.buttons {
+    display: flex;
+    gap: 1rem;
 }
 
 section#tree button#btn-load-tree:hover,

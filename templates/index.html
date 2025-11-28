@@ -19,8 +19,7 @@
 
     <main class="grid">
         <section id="tree">
-            <h2>Carregue a árvore original</h2>
-            <button id="btn-load-tree">Carregar</button>
+            <button id="btn-load-tree">Carregar árvore original</button>
             <div class="tree-container"></div>
             <div id="tooltip" class="hidden"></div>
         </section>
@@ -45,10 +44,12 @@
                     <input type="radio" name="simulation-choice" value="consumption-peak" id="consumption-peak">
                     <label for="consumption-peak">Pico de consumo</label>
                 </div>
-                
-                <button type="submit">Simular</button> 
             </form>
-            <button type="button" id="stop-simulation">Finalizar</button> <div class="tree-logs-container">
+            <div class="buttons">
+                <button type="submit" form="simulation-form">Simular</button> 
+                <button type="button" id="stop-simulation">Finalizar</button> 
+            </div>
+            <div class="tree-logs-container">
                 <div class="tree-container"></div>
                 <div class="logs-container">
                     <h3>Logs</h3>
