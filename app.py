@@ -6,7 +6,7 @@ import asyncio
 import json
 
 # trocar depois para as funções reais do projeto!!! TEMPORÁRIO 
-from backend.tree import (
+from backend_temp.tree import (
     get_initial_tree,
     alterar_capacidade_no,
     alterar_carga_no,
@@ -16,7 +16,7 @@ from backend.tree import (
 )
 
 # trocar depois para as funções reais do projeto!!! TEMPORÁRIO 
-from backend.simulation import (
+from backend_temp.simulation import (
     sim_sobrecarga,
     sim_falha_no,
     sim_pico_consumo
