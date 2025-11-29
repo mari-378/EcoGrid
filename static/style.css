@@ -101,6 +101,60 @@ main.grid section#change-node {
     gap: 0.5rem;
 }
 
+section#change-node p {
+    margin-top: 1rem;
+}
+
+section#change-node .container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+section#change-node .container .esquerda {
+    width: 40%;
+}
+
+section#change-node .container .direita {
+    width: 60%;
+}
+
+section#change-node table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.5rem 0;
+    font-family: monospace;
+    font-size: 0.7rem;
+    text-align: center;
+    color: var(--escuro);
+    border-radius: 0.4rem;
+    overflow: hidden;
+    box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.12);
+}
+
+section#change-node table thead th {
+    background: var(--borda);
+    color: var(--escuro);
+    font-weight: bolder;
+    padding: 0.6rem;
+}
+
+section#change-node table tbody tr:nth-child(even) {
+    background-color: var(--fundo);
+}
+
+section#change-node table tbody tr:nth-child(odd) {
+    background-color: var(--fundo-logs);
+}
+
+section#change-node table tbody td {
+    padding: 0.6rem;
+}
+
+section#change-node table td:first-child {
+    font-weight: 600;
+}
+
 section#simulation form,
 section#change-node form {
     display: flex;
@@ -109,11 +163,20 @@ section#change-node form {
     margin-top: 1rem;
 }
 
+section#change-node select {
+    background-color: var(--fundo);
+}
+
 form input[type="text"] {
     background-color: var(--fundo);
-    width: 10%;
+    width: 60%;
     border-radius: 1rem;
     border: none;
+    padding-left: 0.3rem;
+}
+
+#simulation form input[type="text"] {
+    width: 30%;
 }
 
 .tree-logs-container {

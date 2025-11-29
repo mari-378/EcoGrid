@@ -25,8 +25,9 @@
         </section>
 
         <section id="simulation">
-            <h2>Escolha um evento para simular</h2>
-            <p>Obs: o programa forçará o evento a acontecer no nó em questão!</p>
+            <h2>SIMULAÇÃO</h2>
+            <p>Escolha um tipo de evento para simular!</p>
+            <p>O programa forçará o evento a acontecer no nó selecionado.</p>
 
             <form id="simulation-form"> 
                 <div>
@@ -58,36 +59,83 @@
         </section>
 
         <section id="change-node">
-            <h2>Altere atributos de um nó</h2>
-            <p>Aqui você poderá alterar o valor de um atributo do nó selecionado
-                e ver como o sistema responde às suas mudanças!
-            </p>
+            <div class="container">
+                <div class="esquerda">
+                    <h2>MODIFICAR NÓ</h2>
+                    <p>Escolha uma das mudanças a serem feitas no nó selecionado <br>
+                        e veja como o sistema responde à ela!
+                    </p>
 
-            <form id="change-node-form"> 
-                <div>
-                    <label for="node-for-change">Digite o id do nó escolhido: </label>
-                    <input type="text" name="node-for-change" required>
-                    <p>Obs: se for adicionar um novo nó, o id digitado deve ser do pai</p>
-                </div>
+                    <form id="change-node-form">
+                        <div>
+                            <label for="node-for-change">Digite o id do nó:</label>
+                            <input type="text" name="node-for-change" placeholder="Nó que sofrerá mudança ou pai que receberá filho" required>
+                        </div>
 
-                <div>
-                    <label for="opcoes">Escolha o que você deseja mudar: </label>
-                    <select name="opcoes" id="opcoes">
-                        <option value="capacity-kw">Capacidade nominal em kW</option>
-                        <option value="current_load_kw">Carga atual em kW</option>
-                        <option value="add-node">Adicionar nó</option>
-                        <option value="delete-node">Deletar nó</option>
-                        <option value="change-parent">Trocar o pai do nó</option>
-                    </select>
-                </div>
+                        <div>
+                            <label for="opcoes">Escolha o que você deseja mudar: </label>
+                            <select name="opcoes" id="opcoes">
+                                <option value="capacity-kw">Alterar capacidade nominal</option>
+                                <!-- <option value="current_load_kw">Carga atual em kW</option> -->
+                                <option value="add-node">Adicionar nó</option>
+                                <option value="add-node-routing">Adicionar nó com roteamento</option>
+                                <option value="delete-node">Deletar nó</option>
+                                <option value="change-parent">Trocar o pai do nó</option>
+                                <option value="change-parent-routing">Trocar o pai do nó com roteamento</option>
+                            </select>
+                        </div>
 
-                <div>
-                    <label for="new-value">Novo valor: </label>
-                    <input type="text" name="new-value">
+                        <div>
+                            <label for="new-value">Novo valor: </label>
+                            <input type="text" name="new-value" placeholder="Apenas novo valor de capacidade ou novo pai">
+                        </div>
+                        
+                        <button type="submit">Enviar</button>
+                    </form>
                 </div>
                 
-                <button type="submit">Enviar</button>
-            </form>
+                <div class="direita">
+                    <table>
+                        <thead>
+                            <th>MUDANÇA</th>
+                            <th>DESCRIÇÃO</th>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>Alterar capacidade nominal</td>
+                                <td>Altera o valor da capacidade nominal do nó (em kW)</td>
+                            </tr>
+
+                            <tr>
+                                <td>Adicionar nó</td>
+                                <td>Força a adição de um novo nó no pai em questão</td>
+                            </tr>
+
+                            <tr>
+                                <td>Adicionar nó com roteamento</td>
+                                <td>Adiciona um nó ao seu melhor pai da rede</td>
+                            </tr>
+
+                            <tr>
+                                <td>Deletar nó</td>
+                                <td>Deleta o nó em questão da árvore</td>
+                            </tr>
+
+                            <tr>
+                                <td>Trocar o pai do nó</td>
+                                <td>Troca o pai do nó forçadamente para o nó escolhido</td>
+                            </tr>
+
+                            <tr>
+                                <td>Trocar o pai do nó com roteamento</td>
+                                <td>Troca o pai do nó para o seu melhor pai da rede</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
             
             <div class="tree-logs-container">
                 <div class="tree-container"></div>
