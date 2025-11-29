@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from typing import Mapping, Sequence
 
-from core.graph_core import PowerGridGraph
-from core.models import Node, NodeType
-from logic.bplus_index import BPlusIndex
-from physical.device_model import IoTDevice
+from backend.core.graph_core import PowerGridGraph
+from backend.core.models import Node, NodeType
+from backend.logic.bplus_index import BPlusIndex
+from backend.physical.device_model import IoTDevice
 
 
 def recompute_consumer_load(

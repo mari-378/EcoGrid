@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from typing import Dict, List, MutableMapping, Sequence
 
-from core.graph_core import PowerGridGraph
-from core.models import Edge, Node, NodeType
-from logic.bplus_index import BPlusIndex
-from logic.logical_graph_service import LogicalGraphService
-from logic.ui_tree_snapshot import build_full_ui_snapshot
-from physical.device_model import IoTDevice
+from backend.core.graph_core import PowerGridGraph
+from backend.core.models import Edge, Node, NodeType
+from backend.logic.bplus_index import BPlusIndex
+from backend.logic.logical_graph_service import LogicalGraphService
+from backend.logic.ui_tree_snapshot import build_full_ui_snapshot
+from backend.physical.device_model import IoTDevice
 
 def api_get_tree_snapshot(
     graph: PowerGridGraph,

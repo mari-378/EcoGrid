@@ -5,32 +5,32 @@ from fastapi.templating import Jinja2Templates
 import asyncio
 import json
 
-# trocar depois para as funções reais do projeto!!! TEMPORÁRIO 
-from backend_temp.tree import (
-    get_initial_tree,
-    alterar_capacidade_no,
-    alterar_carga_no,
-    adicionar_no,
-    deletar_no,
-    alterar_pai_no
+# importa todas as funções que serão consumidas do backend
+from backend.api.logical_backend_api import (
+    api_get_tree_snapshot,
+    api_add_node_with_routing,
+    api_remove_node,
+    api_change_parent_with_routing,
+    api_force_change_parent,
+    api_set_node_capacity,
+    api_set_device_average_load, 
 )
 
-# trocar depois para as funções reais do projeto!!! TEMPORÁRIO 
-from backend_temp.simulation import (
-    sim_sobrecarga,
-    sim_falha_no,
-    sim_pico_consumo
-)
+from backend.core.graph_core import PowerGridGraph
+from backend.logic.bplus_index import BPlusIndex
+from backend.logic.logical_graph_service import LogicalGraphService
+
+graph = PowerGridGraph()
+index = BPlusIndex()
+service = LogicalGraphService(index=index, graph=graph)
 
 # configuração do FastAPI
 app = FastAPI()
 
 # configuração dos diretórios de arquivos estáticos e templates
-# o caminho para o static deve ser /static/
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-# rota principal que renderiza o template HTML
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
     '''função que renderiza o template HTML principal'''
@@ -41,11 +41,10 @@ def home(request: Request):
         {"request": request, "base_url": base_url}
     )
 
-# rota para enviar a árvore inicial
 @app.post("/tree")
 async def get_tree():
     """função que retorna a árvore completa inicial."""
-    arvore = get_initial_tree()
+    arvore = api_get_tree_snapshot(graph, index, service)
     return JSONResponse(arvore)
 
 # rota para o WebSocket de simulação
@@ -68,8 +67,6 @@ async def simulation_socket(ws: WebSocket):
 
         # loop que envia a nova árvore a cada segundo
         while True:
-            # as funções de simulação devem retornar a árvore completa (flat list) E os logs.
-            # ex: {'tree': [...], 'logs': [...]}
             if tipo == "overload":
                 arvore = sim_sobrecarga(id_no)
 
@@ -106,24 +103,25 @@ async def change_node(data: dict):
     if not id_no:
         return JSONResponse({"error": "ID do nó não fornecido"}, status_code=400)
 
-    # as funções de alteração devem retornar a nova árvore completa (flat list) E os logs.
-    # ex: {'tree': [...], 'logs': [...]}
     nova_arvore = None
 
     if "capacity_kw" in data:
-        nova_arvore = alterar_capacidade_no(id_no, data["capacity_kw"])
+        nova_arvore = api_set_node_capacity(id_no, data["capacity"])
 
-    elif "current_load_kw" in data:
-        nova_arvore = alterar_carga_no(id_no, data["current_load_kw"])
+    # elif "current_load_kw" in data:
+    #     nova_arvore = alterar_carga_no(id_no, data["current_load_kw"])
 
     elif data.get("add_node") is True:
-        nova_arvore = adicionar_no(id_no) # o id enviado aqui é o do pai!!
+        nova_arvore = api_add_node_with_routing(id_no) # o id enviado aqui é o do pai!!
 
     elif data.get("delete_node") is True:
-        nova_arvore = deletar_no(id_no)
+        nova_arvore = api_remove_node(id_no)
+
+    elif data.get("change_parent") is True:
+        nova_arvore = api_change_parent_with_routing(id_no)
 
     elif "new_parent" in data:
-        nova_arvore = alterar_pai_no(id_no, data["new_parent"])
+        nova_arvore = api_force_change_parent(id_no, data["new_parent"])
 
     else:
         return JSONResponse({"error": "Nenhuma ação válida fornecida"}, status_code=400)

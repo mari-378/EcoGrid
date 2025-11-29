@@ -3,9 +3,9 @@ from __future__ import annotations
 import math
 from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 
-from core.graph_core import PowerGridGraph
-from core.models import ClusterInfo, Edge, EdgeType, Node, NodeType
-from config import SimulationConfig
+from backend.core.graph_core import PowerGridGraph
+from backend.core.models import ClusterInfo, Edge, EdgeType, Node, NodeType
+from backend.config import SimulationConfig
 
 
 def _euclidean_distance(a: Node, b: Node) -> float:

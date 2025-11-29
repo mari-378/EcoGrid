@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from typing import Dict, List, Optional, Set
 
-from core.graph_core import PowerGridGraph
-from core.models import Node, NodeType
-from logic.bplus_index import BPlusIndex
+from backend.core.graph_core import PowerGridGraph
+from backend.core.models import Node, NodeType
+from backend.logic.bplus_index import BPlusIndex
 
 
 def _compute_status(node: Node, unsupplied_ids: Set[str]) -> str:

@@ -3,8 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
-from core.graph_core import PowerGridGraph
-from core.models import Node, NodeType
+from backend.core.graph_core import PowerGridGraph
+from backend.core.models import Node, NodeType
 from physical.device_model import DeviceType, IoTDevice
 from physical.device_catalog import DeviceTemplate, get_device_template
 from physical.load_process import (

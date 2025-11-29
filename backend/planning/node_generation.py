@@ -4,9 +4,9 @@ import math
 import random
 from typing import List, Sequence
 
-from core.models import ClusterInfo, Node, NodeType
-from core.graph_core import PowerGridGraph
-from config import SimulationConfig
+from backend.core.models import ClusterInfo, Node, NodeType
+from backend.core.graph_core import PowerGridGraph
+from backend.config import SimulationConfig
 
 
 def _make_rng(config: SimulationConfig) -> random.Random:

@@ -4,8 +4,8 @@ import math
 from dataclasses import dataclass
 from typing import Literal, Optional, Tuple
 
-from core.graph_core import PowerGridGraph
-from core.models import Edge, Node
+from backend.core.graph_core import PowerGridGraph
+from backend.core.models import Edge, Node
 
 
 VoltageLevel = Literal["HV", "MV", "LV"]
