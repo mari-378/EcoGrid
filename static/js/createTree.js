@@ -130,14 +130,14 @@ export function buildTree(root, g) {
   //   .attr("fill", (d) => statusColors[d.data.status] || "#fff");
 
   // retângulo de fundo do ícone com cor baseada no status
-  // node
-  //   .insert("rect", "image")
-  //   .attr("x", -16)
-  //   .attr("y", -10)
-  //   .attr("width", 32)
-  //   .attr("height", 26)
-  //   .attr("rx", 6)
-  //   .attr("fill", (d) => statusColors[d.data.status] || "#fff");
+  node
+    .insert("rect", "image")
+    .attr("x", -16)
+    .attr("y", -10)
+    .attr("width", 32)
+    .attr("height", 26)
+    .attr("rx", 6)
+    .attr("fill", (d) => statusColors[d.data.status] || "#fff");
 
   node
     .append("image")

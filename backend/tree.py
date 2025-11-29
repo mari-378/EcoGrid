@@ -5,7 +5,7 @@ import json
 INITIAL_TREE = [
     {
       "id": "GP_001",
-      "parent_id": None,
+      "parent_id": "",
       "node_type": "GENERATION_PLANT",
       "position_x": 100.0,
       "position_y": 200.0,
