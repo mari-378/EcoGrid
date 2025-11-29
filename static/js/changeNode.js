@@ -18,10 +18,10 @@ export function setupChangeNode(changeForm, BASE_URL) {
       if (isNaN(value)) return alert("Capacidade deve ser um número.");
       payload.capacity_kw = value;
 
-    } else if (action === "current_load_kw") {
-      const value = Number(newValue);
-      if (isNaN(value)) return alert("Carga atual deve ser um número.");
-      payload.current_load_kw = value;
+    // } else if (action === "current_load_kw") {
+    //   const value = Number(newValue);
+    //   if (isNaN(value)) return alert("Carga atual deve ser um número.");
+    //   payload.current_load_kw = value;
 
     } else if (action === "add-node") {
       payload.add_node = true;
@@ -33,11 +33,12 @@ export function setupChangeNode(changeForm, BASE_URL) {
       if (!newValue) return alert("O novo pai deve ter um ID.");
       payload.new_parent = newValue;
       
+    } else if (action === "change-parent-routing") {
+      payload.change_parent_routing = true;
+
     } else {
       return alert("Nenhuma ação válida selecionada.");
     }
-
-    if (action === "delete-node") delete payload.new_value;
 
     try {
       const response = await fetch(`${BASE_URL}/change-node`, {

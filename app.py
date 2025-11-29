@@ -106,7 +106,7 @@ async def change_node(data: dict):
     nova_arvore = None
 
     if "capacity_kw" in data:
-        nova_arvore = api_set_node_capacity(id_no, data["capacity"])
+        nova_arvore = api_set_node_capacity(id_no, data["capacity_kw"])
 
     # elif "current_load_kw" in data:
     #     nova_arvore = alterar_carga_no(id_no, data["current_load_kw"])
@@ -117,7 +117,7 @@ async def change_node(data: dict):
     elif data.get("delete_node") is True:
         nova_arvore = api_remove_node(id_no)
 
-    elif data.get("change_parent") is True:
+    elif data.get("change_parent_routing") is True:
         nova_arvore = api_change_parent_with_routing(id_no)
 
     elif "new_parent" in data:
