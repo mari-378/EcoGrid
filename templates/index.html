@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <title>EcoGrid</title>
+    <link rel="stylesheet" href="/static/style.css" /> 
+</head>
+<body data-base-url="{{ base_url }}"> 
+    <header>
+        <h1>EcoGrid</h1>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#tree">Árvore</a></li>
+                <li><a href="#simulation">Simulação</a></li>
+                <li><a href="#change-node">Modificar nó</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="grid">
+        <section id="tree">
+            <button id="btn-load-tree">Carregar árvore original</button>
+            <div class="tree-container"></div>
+            <div id="tooltip" class="hidden"></div>
+        </section>
+
+        <section id="simulation">
+            <h2>Escolha um evento para simular</h2>
+            <p>Obs: o programa forçará o evento a acontecer no nó em questão!</p>
+
+            <form id="simulation-form"> 
+                <div>
+                    <label for="chosen-node">Digite o id do nó escolhido: </label>
+                    <input type="text" name="sim-chosen-node" id="chosen-node" required>
+                </div>
+
+                <div>
+                    <input type="radio" name="simulation-choice" value="overload" id="overload" required>
+                    <label for="overload">Sobrecarga</label>
+
+                    <input type="radio" name="simulation-choice" value="node-failure" id="node-failure">
+                    <label for="node-failure">Falha de nó</label>
+
+                    <input type="radio" name="simulation-choice" value="consumption-peak" id="consumption-peak">
+                    <label for="consumption-peak">Pico de consumo</label>
+                </div>
+            </form>
+            <div class="buttons">
+                <button type="submit" form="simulation-form">Simular</button> 
+                <button type="button" id="stop-simulation">Finalizar</button> 
+            </div>
+            <div class="tree-logs-container">
+                <div class="tree-container"></div>
+                <div class="logs-container">
+                    <h3>Logs</h3>
+                </div>
+            </div>
+        </section>
+
+        <section id="change-node">
+            <h2>Altere atributos de um nó</h2>
+            <p>Aqui você poderá alterar o valor de um atributo do nó selecionado
+                e ver como o sistema responde às suas mudanças!
+            </p>
+
+            <form id="change-node-form"> 
+                <div>
+                    <label for="node-for-change">Digite o id do nó escolhido: </label>
+                    <input type="text" name="node-for-change" required>
+                    <p>Obs: se for adicionar um novo nó, o id digitado deve ser do pai</p>
+                </div>
+
+                <div>
+                    <label for="opcoes">Escolha o que você deseja mudar: </label>
+                    <select name="opcoes" id="opcoes">
+                        <option value="capacity-kw">Capacidade nominal em kW</option>
+                        <option value="current_load_kw">Carga atual em kW</option>
+                        <option value="add-node">Adicionar nó</option>
+                        <option value="delete-node">Deletar nó</option>
+                        <option value="change-parent">Trocar o pai do nó</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="new-value">Novo valor: </label>
+                    <input type="text" name="new-value">
+                </div>
+                
+                <button type="submit">Enviar</button>
+            </form>
+            
+            <div class="tree-logs-container">
+                <div class="tree-container"></div>
+                <div class="logs-container">
+                    <h3>Logs</h3>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="/static/index.js" type="module"></script>
+</body>
+</html>
