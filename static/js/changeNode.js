@@ -5,9 +5,9 @@ export function setupChangeNode(changeForm, BASE_URL) {
     e.preventDefault();
 
     const formData = new FormData(changeForm);
-    const nodeId = formData.get("node-for-change");
-    const action = formData.get("opcoes");
-    const newValue = formData.get("new-value");
+    const nodeId = formData.get("node-for-change"); // se eu quiser garantir que o id vá sempre maiusculo,
+    const action = formData.get("opcoes");          
+    const newValue = formData.get("new-value");     // então devo adicionar um ?.toUpperCase();
 
     if (!nodeId) return alert("O ID do nó é obrigatório.");
 
