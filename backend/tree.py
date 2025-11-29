@@ -4,59 +4,76 @@ import json
 # Árvore inicial (flat list) para simular o estado do sistema
 INITIAL_TREE = [
     {
-        "id": "A1", 
-        "parent_id": "", 
-        "name": "Subestação Principal", 
-        "node_type": "substation", 
-        "capacity_kw": 5000, 
-        "current_load_kw": 1500, 
-        "utilization_ratio": 0.3, 
-        "status": "normal", 
-        "resistance": None
+      "id": "GP_001",
+      "parent_id": None,
+      "node_type": "GENERATION_PLANT",
+      "position_x": 100.0,
+      "position_y": 200.0,
+      "cluster_id": "CLUSTER_A",
+      "nominal_voltage": 500000.0,
+      "capacity": 5000000.0,
+      "current_load": 3200000.0,
+      "status": "NORMAL"
     },
     {
-        "id": "B1", 
-        "parent_id": "A1", 
-        "name": "Transformador Bairro 1", 
-        "node_type": "transformer", 
-        "capacity_kw": 1000, 
-        "current_load_kw": 500, 
-        "utilization_ratio": 0.5, 
-        "status": "normal", 
-        "resistance": "0.5 ohm"
+      "id": "TS_001",
+      "parent_id": "GP_001",
+      "node_type": "TRANSMISSION_SUBSTATION",
+      "position_x": 110.0,
+      "position_y": 210.0,
+      "cluster_id": "CLUSTER_A",
+      "nominal_voltage": 500000.0,
+      "capacity": 2000000.0,
+      "current_load": 1600000.0,
+      "status": "WARNING"
     },
     {
-        "id": "B2", 
-        "parent_id": "A1", 
-        "name": "Transformador Bairro 2", 
-        "node_type": "transformer", 
-        "capacity_kw": 1000, 
-        "current_load_kw": 800, 
-        "utilization_ratio": 0.8, 
-        "status": "warning", 
-        "resistance": "0.5 ohm"
+      "id": "DS_001",
+      "parent_id": "TS_001",
+      "node_type": "DISTRIBUTION_SUBSTATION",
+      "position_x": 120.0,
+      "position_y": 215.0,
+      "cluster_id": "CLUSTER_A",
+      "nominal_voltage": 13800.0,
+      "capacity": 800000.0,
+      "current_load": 820000.0,
+      "status": "OVERLOADED"
     },
     {
-        "id": "C1", 
-        "parent_id": "B1", 
-        "name": "Consumidor Casa X", 
-        "node_type": "consumer", 
-        "capacity_kw": 10, 
-        "current_load_kw": 5, 
-        "utilization_ratio": 0.5, 
-        "status": "normal", 
-        "resistance": "1.0 ohm"
+      "id": "C_001",
+      "parent_id": "DS_001",
+      "node_type": "CONSUMER_POINT",
+      "position_x": 121.0,
+      "position_y": 220.0,
+      "cluster_id": "CLUSTER_A",
+      "nominal_voltage": 220.0,
+      "capacity": 5000.0,
+      "current_load": 4200.0,
+      "status": "WARNING"
     },
     {
-        "id": "C2", 
-        "parent_id": "B1", 
-        "name": "Consumidor Apartamento Y", 
-        "node_type": "consumer", 
-        "capacity_kw": 20, 
-        "current_load_kw": 18, 
-        "utilization_ratio": 0.9, 
-        "status": "warning", 
-        "resistance": "1.0 ohm"
+      "id": "C_002",
+      "parent_id": "DS_001",
+      "node_type": "CONSUMER_POINT",
+      "position_x": 122.0,
+      "position_y": 222.0,
+      "cluster_id": "CLUSTER_A",
+      "nominal_voltage": 220.0,
+      "capacity": 3000.0,
+      "current_load": 3100.0,
+      "status": "OVERLOADED"
+    },
+    {
+      "id": "C_003",
+      "parent_id": "DS_001",
+      "node_type": "CONSUMER_POINT",
+      "position_x": 300.0,
+      "position_y": 400.0,
+      "cluster_id": "CLUSTER_B",
+      "nominal_voltage": 220.0,
+      "capacity": 4000.0,
+      "current_load": 0.0,
+      "status": "UNSUPPLIED"
     }
 ]
 
@@ -132,7 +149,7 @@ def _recalculate_all_loads_and_statuses(tree):
         # Atualiza a carga do pai
         parent_node["current_load_kw"] = total_load
         
-        logs.append(f"Carga do nó {parent_id} ({parent_node['name']}) recalculada para {total_load} kW.")
+        logs.append(f"Carga do nó {parent_id} ({parent_node['id']}) recalculada para {total_load} kW.")
 
 
     # 2. Recalcula a utilização e status de todos os nós
