@@ -1,17 +1,18 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import random
 from typing import List, Optional, MutableMapping, Sequence, Set
 
-from backend.core.graph_core import PowerGridGraph
-from backend.core.models import Node, Edge, NodeType
-from backend.logic.bplus_index import BPlusIndex
-from backend.logic.parent_selection import (
+from core.graph_core import PowerGridGraph
+from core.models import Node, Edge, NodeType
+from logic.bplus_index import BPlusIndex
+from logic.parent_selection import (
     ParentSelectionResult,
     find_best_parent_for_node,
 )
-from backend.logic import load_aggregation
-from backend.physical.device_model import IoTDevice
+from logic import load_aggregation
+from physical.device_model import IoTDevice
 
 
 @dataclass
@@ -132,6 +133,140 @@ class LogicalGraphService:
         self.graph = graph
         self.index = index
         self.unsupplied_consumers: Set[str] = set()
+        self._log_buffer: List[str] = []
+
+    def log(self, message: str) -> None:
+        self._log_buffer.append(message)
+
+    def consume_logs(self) -> List[str]:
+        logs = list(self._log_buffer)
+        self._log_buffer.clear()
+        return logs
+
+    def retry_unsupplied_routing(self) -> None:
+        """
+        Tenta encontrar pai para consumidores sem fornecedor e para
+        subestações isoladas (raízes que não são usinas).
+        """
+        count = 0
+
+        # 1. Tenta reconectar consumidores explicitamente não supridos
+        unsupplied = list(self.unsupplied_consumers)
+        for consumer_id in unsupplied:
+            result = self.change_parent_with_routing(child_id=consumer_id)
+            if result.success:
+                count += 1
+
+        # 2. Tenta reconectar subestações isoladas (que se tornaram raízes por falta de pai)
+        #    Identificamos como raízes que NÃO são usinas (GENERATION_PLANT).
+        current_roots = list(self.index.get_roots())
+        for root_id in current_roots:
+            node = self.graph.get_node(root_id)
+            if node and node.node_type != NodeType.GENERATION_PLANT:
+                # Tenta rotear esta subestação órfã para um novo pai (ex: outra TS ou Usina)
+                result = self.change_parent_with_routing(child_id=root_id)
+                if result.success:
+                    count += 1
+                    # Nota: se essa subestação reconectar, seus filhos também "voltam" para a rede.
+
+        if count > 0:
+            self.log(f"Recuperação estrutural: {count} nós (consumidores ou subestações) foram reconectados à rede com sucesso.")
+
+    def handle_overload(self, node_id: str) -> None:
+        """
+        Verifica sobrecarga e realiza load shedding (corte de carga) se necessário.
+        Se a carga atual exceder a capacidade, desconecta filhos aleatórios até
+        que a situação se regularize.
+        """
+        node = self.graph.get_node(node_id)
+        if node is None or node.capacity is None or node.current_load is None:
+            return
+
+        if node.current_load <= node.capacity:
+            return
+
+        self.log(f"ALERTA DE SOBRECARGA: {node_id} (Carga: {node.current_load:.2f}kW > Cap: {node.capacity:.2f}kW). Iniciando corte de carga.")
+
+        children = self.index.get_children(node_id)
+        # Embaralha para desconectar aleatoriamente
+        random.shuffle(children)
+
+        for child_id in children:
+            if node.current_load <= node.capacity:
+                break
+
+            child = self.graph.get_node(child_id)
+            if not child: continue
+
+            # Desconecta o filho (torna-se raiz temporariamente)
+            self.index.detach_node(child_id)
+            # detach_node já remove da lista de filhos do pai
+
+            # Se for consumidor, registra como não suprido
+            if child.node_type == NodeType.CONSUMER_POINT:
+                self.unsupplied_consumers.add(child_id)
+
+            self.log(f"Corte de carga: Nó {child_id} desconectado de {node_id} para alívio do sistema.")
+
+            # Recalcula a carga do nó pai (agora menor)
+            load_aggregation.recompute_node_load_from_children(node_id, self.graph, self.index)
+            # Propaga a redução para cima (opcional, mas bom para consistência)
+            load_aggregation.propagate_load_upwards(node_id, self.graph, self.index)
+
+        if node.current_load > node.capacity:
+            self.log(f"ALERTA CRÍTICO: {node_id} permanece sobrecarregado ({node.current_load:.2f}kW) mesmo após corte de todos os filhos.")
+
+    # ------------------------------------------------------------------
+    # Hidratação do estado lógico (Correção 1.1)
+    # ------------------------------------------------------------------
+
+    def hydrate_from_physical(self) -> None:
+        """
+        Reconstrói o estado lógico (árvore B+ e estados de suprimento)
+        a partir da topologia física atual do grafo.
+
+        Estratégia:
+            1. Define todas as usinas (GENERATION_PLANT) como raízes.
+            2. Itera sobre os demais nós em ordem hierárquica
+               (Transmissão -> Distribuição -> Consumo).
+            3. Para cada nó, executa `change_parent_with_routing` para
+               tentar encontrar o melhor pai lógico disponível.
+            4. Se um nó não encontrar pai, ele permanece desconectado
+               (ou raiz isolada) e, se for consumidor, é marcado como
+               não suprido.
+        """
+        # 1. Identifica e adiciona raízes (Usinas)
+        for node in self.graph.nodes.values():
+            if node.node_type == NodeType.GENERATION_PLANT:
+                self.index.add_root(node.id)
+
+        # 2. Prepara lista de nós a serem conectados via roteamento
+        nodes_to_process = []
+        for node in self.graph.nodes.values():
+            if node.node_type == NodeType.GENERATION_PLANT:
+                continue
+            nodes_to_process.append(node)
+
+        # Ordena por prioridade hierárquica
+        def priority(n: Node) -> int:
+            if n.node_type == NodeType.TRANSMISSION_SUBSTATION:
+                return 1
+            if n.node_type == NodeType.DISTRIBUTION_SUBSTATION:
+                return 2
+            if n.node_type == NodeType.CONSUMER_POINT:
+                return 3
+            return 99
+
+        nodes_to_process.sort(key=priority)
+
+        # 3. Executa roteamento para cada nó
+        for node in nodes_to_process:
+            self.change_parent_with_routing(child_id=node.id)
+
+        # Log de inicialização
+        ts_count = sum(1 for n in self.graph.nodes.values() if n.node_type == NodeType.TRANSMISSION_SUBSTATION)
+        ds_count = sum(1 for n in self.graph.nodes.values() if n.node_type == NodeType.DISTRIBUTION_SUBSTATION)
+        self.log(f"Rede ligada e inicializada com sucesso. {ts_count} Subestações de Transmissão e {ds_count} Subestações de Distribuição conectadas aos seus fornecedores.")
 
     # ------------------------------------------------------------------
     # Atualização de carga a partir de dispositivos
@@ -177,6 +312,9 @@ class LogicalGraphService:
         if parent_id is not None and consumer_id in self.unsupplied_consumers:
             self.unsupplied_consumers.discard(consumer_id)
 
+        current_load = float(self.graph.get_node(consumer_id).current_load or 0.0)
+        self.log(f"Carga do consumidor {consumer_id} atualizada para {current_load:.2f}kW devido a alterações nos dispositivos.")
+
     # ------------------------------------------------------------------
     # Capacidade de nós
     # ------------------------------------------------------------------
@@ -202,6 +340,60 @@ class LogicalGraphService:
         if node is None:
             return
         node.capacity = new_capacity
+
+    def force_overload(self, node_id: str, overload_percentage: float) -> bool:
+        """
+        Força o status de sobrecarga em um nó interno (não-dispositivo)
+        reduzindo sua capacidade para um valor abaixo da carga atual.
+
+        Fórmula aplicada:
+            new_capacity = current_load / (1 + overload_percentage)
+
+        Exemplo:
+            Se current_load = 100 e overload_percentage = 0.2 (20%),
+            new_capacity = 100 / 1.2 = 83.33
+            Assim, current_load (100) > capacity (83.33) -> Overload.
+
+        Restrições:
+            - Aplica-se apenas a nós com filhos (Subestações e Usinas).
+            - Não se aplica a nós do tipo CONSUMER_POINT (dispositivos).
+            - Se o nó não tiver carga atual (current_load is None/0),
+              a capacidade será definida como 0.0 (se possível).
+
+        Parâmetros:
+            node_id:
+                Identificador do nó alvo.
+            overload_percentage:
+                Percentual de sobrecarga desejado (ex: 0.2 para 20%).
+
+        Retorno:
+            True se a operação foi aplicada; False se o nó não foi
+            encontrado ou se o tipo não for permitido.
+        """
+        node = self.graph.get_node(node_id)
+        if node is None:
+            return False
+
+        # Restrição: apenas nós internos (Usinas, Transmissão, Distribuição).
+        # Exclui explicitamente consumidores (que contêm dispositivos).
+        if node.node_type == NodeType.CONSUMER_POINT:
+            return False
+
+        current_load = node.current_load or 0.0
+
+        # Evita divisão por zero ou negativa se porcentagem for <= -1
+        divisor = 1.0 + overload_percentage
+        if divisor <= 0.001:
+            divisor = 0.001
+
+        new_capacity = current_load / divisor
+
+        # Atualiza a capacidade do nó
+        node.capacity = new_capacity
+
+        self.log(f"ALERTA: Fornecedor {node_id} teve sua capacidade limitada a {new_capacity:.2f}kW. Iniciando redistribuição de carga.")
+
+        return True
 
     # ------------------------------------------------------------------
     # Operações de troca de pai (com e sem roteamento)
@@ -256,6 +448,9 @@ class LogicalGraphService:
             # Não há pai compatível; marca consumidor como não suprido.
             if child.node_type == NodeType.CONSUMER_POINT:
                 self.unsupplied_consumers.add(child_id)
+
+            # (DEBUG removido para evitar poluição, ou mantido se útil)
+            # print(f"[DEBUG] Failed to find parent via routing for {child_id}...")
 
             return ChangeParentResult(
                 success=False,
@@ -341,6 +536,8 @@ class LogicalGraphService:
         # não supridos.
         if child.node_type == NodeType.CONSUMER_POINT:
             self.unsupplied_consumers.discard(child_id)
+
+        self.log(f"Nó {child_id} trocou de fornecedor: saiu de {old_parent_id} para {new_parent_id}.")
 
         return ChangeParentResult(
             success=True,
@@ -471,6 +668,8 @@ class LogicalGraphService:
         if child.node_type == NodeType.CONSUMER_POINT:
             self.unsupplied_consumers.discard(child_id)
 
+        self.log(f"Nó {child_id} trocou de fornecedor: saiu de {old_parent_id} para {new_parent_id}.")
+
         return ChangeParentResult(
             success=True,
             child_id=child_id,
@@ -529,6 +728,11 @@ class LogicalGraphService:
         # Para os demais tipos, tentamos achar um pai adequado via roteamento.
         result = self.change_parent_with_routing(child_id=node.id)
 
+        if result.success:
+            self.log(f"Nó {node.id} ({node.node_type.name}) foi conectado ao fornecedor {result.new_parent_id}.")
+        else:
+            self.log(f"Nó {node.id} foi adicionado, mas não encontrou um fornecedor compatível e está sem energia.")
+
         # Se não houver pai viável e o nó for consumidor, garantimos
         # que ele esteja marcado como não suprido.
         if not result.success and node.node_type == NodeType.CONSUMER_POINT:
@@ -583,8 +787,14 @@ class LogicalGraphService:
             # Tenta encontrar novo pai via roteamento.
             result = self.change_parent_with_routing(child_id=child_id)
 
-            if not result.success and child.node_type == NodeType.CONSUMER_POINT:
-                self.unsupplied_consumers.add(child_id)
+            if not result.success:
+                # Se falhar em encontrar pai:
+                # - Se for consumidor, marca como não suprido.
+                if child.node_type == NodeType.CONSUMER_POINT:
+                    self.unsupplied_consumers.add(child_id)
+                # (Correção 1.3: Subestações fantasmas podem ser tratadas aqui se desejado,
+                # mas elas se tornam raízes. O método _compute_status na UI deve verificar
+                # se a raiz é uma usina para determinar status UNSUPPLIED recursivo.)
 
         # Remove a estação do índice lógico.
         self.index.remove_node(station_id)

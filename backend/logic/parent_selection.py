@@ -4,9 +4,9 @@ from dataclasses import dataclass
 import heapq
 from typing import Dict, List, Optional, Set, Tuple
 
-from backend.core.graph_core import PowerGridGraph
-from backend.core.models import Edge, Node, NodeType
-from backend.physical.energy_loss import estimate_edge_loss
+from core.graph_core import PowerGridGraph
+from core.models import Edge, Node, NodeType
+from physical.energy_loss import estimate_edge_loss
 
 
 @dataclass
