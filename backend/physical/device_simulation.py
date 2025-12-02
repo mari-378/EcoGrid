@@ -3,8 +3,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
-from backend.core.graph_core import PowerGridGraph
-from backend.core.models import Node, NodeType
+from core.graph_core import PowerGridGraph
+from core.models import Node, NodeType
+from logic.logical_graph_service import LogicalGraphService
 from physical.device_model import DeviceType, IoTDevice
 from physical.device_catalog import DeviceTemplate, get_device_template
 from physical.load_process import (
@@ -282,6 +283,7 @@ def update_devices_and_nodes_loads(
     graph: PowerGridGraph,
     sim_state: DeviceSimulationState,
     t_seconds: float,
+    service: Optional[LogicalGraphService] = None,
 ) -> None:
     """
     Atualiza a carga instantânea de todos os dispositivos e dos nós
@@ -302,16 +304,16 @@ def update_devices_and_nodes_loads(
            - Atualiza o campo `current_load` do nó correspondente no
              grafo (`graph.nodes[node_id].current_load`) com a soma
              obtida.
-           - Nós que não possuem dispositivos associados não são
-             alterados por esta função.
+           - Se `service` for fornecido, a atualização é propagada
+             pela hierarquia lógica (Correção 1.2).
 
     Observações:
         - A função assume que todos os dispositivos presentes em
           `sim_state.devices_by_node` também estão presentes em
           `sim_state.devices_by_id`.
-        - Caso algum dispositivo não possua `DeviceLoadConfig`
-          correspondente, ele será ignorado na atualização de carga
-          instantânea.
+        - Unidades: assume-se que `current_power` está em kW e
+          `current_load` do nó também (ou ambos em Watts). A
+          conversão deve ser garantida na configuração do dispositivo.
 
     Parâmetros:
         graph:
@@ -322,6 +324,9 @@ def update_devices_and_nodes_loads(
         t_seconds:
             Instante de tempo em segundos para o qual se deseja calcular
             as cargas instantâneas.
+        service:
+            Serviço lógico opcional. Se presente, é usado para propagar
+            a carga atualizada hierarquia acima (corrigindo drift).
     """
     # 1) Atualiza a carga de todos os dispositivos que possuem config.
     update_devices_current_power(
@@ -336,16 +341,22 @@ def update_devices_and_nodes_loads(
         if node is None:
             continue
         if node.node_type is not NodeType.CONSUMER_POINT:
-            # Por segurança, apenas nós consumidores recebem soma de dispositivos.
             continue
 
-        total_power = 0.0
-        for dev in devices:
-            if dev.current_power is None:
-                continue
-            total_power += dev.current_power
-
-        node.current_load = total_power
+        if service is not None:
+            # Correção 1.2: Usa o serviço para propagar a carga
+            service.update_load_after_device_change(
+                consumer_id=node_id,
+                node_devices=sim_state.devices_by_node,
+            )
+        else:
+            # Fallback antigo: apenas soma localmente (sem propagação)
+            total_power = 0.0
+            for dev in devices:
+                if dev.current_power is None:
+                    continue
+                total_power += dev.current_power
+            node.current_load = total_power
 
 
 __all__: Sequence[str] = [

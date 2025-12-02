@@ -80,14 +80,14 @@ class SimulationConfig:
     area_height: float = 1000.0
 
     # Clusters e densidade
-    num_clusters: int = 5
-    cluster_radius: float = 120.0
-    consumers_per_cluster: int = 150
-    distribution_substations_per_cluster: int = 3
+    num_clusters: int = 3
+    cluster_radius: float = 480.0
+    consumers_per_cluster: int = 13
+    distribution_substations_per_cluster: int = 2
 
     # Quantidade de nós por nível
-    num_generation_plants: int = 2
-    num_transmission_substations: int = 6
+    num_generation_plants: int = 1
+    num_transmission_substations: int = 2
 
     # Tensões nominais (em Volts)
     generation_nominal_voltage: float | None = 500e3     # 500 kV
@@ -95,10 +95,10 @@ class SimulationConfig:
     distribution_nominal_voltage: float | None = 13.8e3  # 13,8 kV
     consumer_nominal_voltage: float | None = 220.0       # 220 V
 
-    # Limites de comprimento de segmentos
-    max_transmission_segment_length: float = 500.0
-    max_mv_segment_length: float = 300.0
-    max_lv_segment_length: float = 80.0
+    # Limites de comprimento de segmentos (Aumentados para garantir conectividade)
+    max_transmission_segment_length: float = 1500.0
+    max_mv_segment_length: float = 900.0
+    max_lv_segment_length: float = 600.0
 
 
 __all__: Sequence[str] = ["SimulationConfig"]

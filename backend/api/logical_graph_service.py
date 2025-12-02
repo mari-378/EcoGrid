@@ -3,15 +3,15 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List, MutableMapping, Optional, Sequence, Set
 
-from backend.core.graph_core import PowerGridGraph, Edge
-from backend.core.models import Node, NodeType
-from backend.logic.bplus_index import BPlusIndex
-from backend.logic.parent_selection import (
+from core.graph_core import PowerGridGraph, Edge
+from core.models import Node, NodeType
+from logic.bplus_index import BPlusIndex
+from logic.parent_selection import (
     ParentSelectionResult,
     find_best_parent_for_node,
 )
-from backend.logic import load_aggregation
-from backend.physical.device_model import IoTDevice
+from logic import load_aggregation
+from physical.device_model import IoTDevice
 
 
 @dataclass

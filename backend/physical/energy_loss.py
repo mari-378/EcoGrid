@@ -4,8 +4,8 @@ import math
 from dataclasses import dataclass
 from typing import Literal, Optional, Tuple
 
-from backend.core.graph_core import PowerGridGraph
-from backend.core.models import Edge, Node
+from core.graph_core import PowerGridGraph
+from core.models import Edge, Node
 
 
 VoltageLevel = Literal["HV", "MV", "LV"]
@@ -191,6 +191,11 @@ def estimate_edge_loss(
           onde R é a resistência do trecho (ohms).
 
     Observações:
+        - O sistema assume que `power` pode vir em kW (comum em
+          simuladores de distribuição) ou Watts. Se o valor for muito
+          pequeno (< 1000) e a tensão alta (> 1000), assume-se kW e
+          converte-se para Watts para o cálculo físico.
+          (Correção 1.4: Inconsistência de unidades).
 
         - Quando o valor de tensão ou resistência não puder ser
           inferido (por falta de dados), a função retorna um custo
@@ -206,12 +211,11 @@ def estimate_edge_loss(
         edge:
             Aresta pela qual a potência será transportada.
         power:
-            Potência que se deseja transportar pelo trecho (mesmas
-            unidades usadas para `current_load`, em geral watts ou
-            múltiplos coerentes).
+            Potência que se deseja transportar pelo trecho.
 
     Retorno:
-        Estimativa de perda de potência em unidades compatíveis com P.
+        Estimativa de perda de potência em unidades compatíveis com P
+        (convertida se necessário).
         Se não for possível calcular de forma física, retorna um
         custo proporcional ao comprimento do trecho.
     """
@@ -233,8 +237,16 @@ def estimate_edge_loss(
         # ao produto potência x comprimento apenas como heurística.
         return abs(power) * length
 
+    # Conversão de Unidades (Correção 1.4)
+    # Se potência parece estar em kW (pequena) e tensão em Volts (grande), convertemos.
+    # Ex: power=100 (kW), voltage=13800 (V).
+    # Limiar heurístico: power < 1MW e voltage > 1kV.
+    power_watts = abs(power)
+    if power_watts < 10000.0 and voltage > 1000.0:
+         power_watts *= 1000.0
+
     # Corrente aproximada em sistema trifásico balanceado.
-    current = abs(power) / (math.sqrt(3.0) * voltage)
+    current = power_watts / (math.sqrt(3.0) * voltage)
 
     # Perda resistiva aproximada.
     loss = (current ** 2) * resistance
