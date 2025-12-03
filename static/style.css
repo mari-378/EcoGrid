@@ -54,7 +54,7 @@ ul.nav-links li a:hover {
 
 main.grid {
     display: grid;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
     grid-template-columns: 1fr;
 }
 
@@ -82,17 +82,11 @@ section#tree div.tree-container {
     flex-direction: column;
 }
 
-main.grid section#simulation {
+main.grid section#change-node {
     grid-area: 1 / 0 / 2 / 1;
     background-color: var(--claro);
 }
 
-main.grid section#change-node {
-    grid-area: 2 / 0 / 3 / 1;
-    background-color: var(--medio);
-}
-
-main.grid section#simulation,
 main.grid section#change-node {
     padding: 1rem;
     scroll-margin-top: 1.8rem;
@@ -155,7 +149,6 @@ section#change-node table td:first-child {
     font-weight: 600;
 }
 
-section#simulation form,
 section#change-node form {
     display: flex;
     flex-direction: column;
@@ -173,10 +166,6 @@ form input[type="text"] {
     border-radius: 1rem;
     border: none;
     padding-left: 0.3rem;
-}
-
-#simulation form input[type="text"] {
-    width: 30%;
 }
 
 .tree-logs-container {
@@ -217,7 +206,6 @@ form input[type="text"] {
 }
 
 section#tree button#btn-load-tree,
-section#simulation button,
 section#change-node form button {
     width: 10rem;
     padding: 0.2rem;
@@ -228,13 +216,7 @@ section#change-node form button {
     cursor: pointer;
 }
 
-section#simulation div.buttons {
-    display: flex;
-    gap: 1rem;
-}
-
 section#tree button#btn-load-tree:hover,
-section#simulation form button:hover,
 section#change-node form button:hover {
     background-color: var(--hover);
 }
