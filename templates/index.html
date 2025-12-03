@@ -11,7 +11,6 @@
         <nav>
             <ul class="nav-links">
                 <li><a href="#tree">Árvore</a></li>
-                <li><a href="#simulation">Simulação</a></li>
                 <li><a href="#change-node">Modificar nó</a></li>
             </ul>
         </nav>
@@ -22,40 +21,6 @@
             <button id="btn-load-tree">Carregar árvore original</button>
             <div class="tree-container"></div>
             <div id="tooltip" class="hidden"></div>
-        </section>
-
-        <section id="simulation">
-            <h2>SIMULAÇÃO</h2>
-            <p>Escolha um tipo de evento para simular!</p>
-            <p>O programa forçará o evento a acontecer no nó selecionado.</p>
-
-            <form id="simulation-form"> 
-                <div>
-                    <label for="chosen-node">Digite o id do nó escolhido: </label>
-                    <input type="text" name="sim-chosen-node" id="chosen-node" required>
-                </div>
-
-                <div>
-                    <input type="radio" name="simulation-choice" value="overload" id="overload" required>
-                    <label for="overload">Sobrecarga</label>
-
-                    <input type="radio" name="simulation-choice" value="node-failure" id="node-failure">
-                    <label for="node-failure">Falha de nó</label>
-
-                    <input type="radio" name="simulation-choice" value="consumption-peak" id="consumption-peak">
-                    <label for="consumption-peak">Pico de consumo</label>
-                </div>
-            </form>
-            <div class="buttons">
-                <button type="submit" form="simulation-form">Simular</button> 
-                <button type="button" id="stop-simulation">Finalizar</button> 
-            </div>
-            <div class="tree-logs-container">
-                <div class="tree-container"></div>
-                <div class="logs-container">
-                    <h3>Logs</h3>
-                </div>
-            </div>
         </section>
 
         <section id="change-node">
@@ -76,12 +41,9 @@
                             <label for="opcoes">Escolha o que você deseja mudar: </label>
                             <select name="opcoes" id="opcoes">
                                 <option value="capacity-kw">Alterar capacidade nominal</option>
-                                <!-- <option value="current_load_kw">Carga atual em kW</option> -->
                                 <option value="add-node">Adicionar nó</option>
-                                <option value="add-node-routing">Adicionar nó com roteamento</option>
                                 <option value="delete-node">Deletar nó</option>
                                 <option value="change-parent">Trocar o pai do nó</option>
-                                <option value="change-parent-routing">Trocar o pai do nó com roteamento</option>
                             </select>
                         </div>
 
@@ -113,11 +75,6 @@
                             </tr>
 
                             <tr>
-                                <td>Adicionar nó com roteamento</td>
-                                <td>Adiciona um nó ao seu melhor pai da rede</td>
-                            </tr>
-
-                            <tr>
                                 <td>Deletar nó</td>
                                 <td>Deleta o nó em questão da árvore</td>
                             </tr>
@@ -125,11 +82,6 @@
                             <tr>
                                 <td>Trocar o pai do nó</td>
                                 <td>Troca o pai do nó forçadamente para o nó escolhido</td>
-                            </tr>
-
-                            <tr>
-                                <td>Trocar o pai do nó com roteamento</td>
-                                <td>Troca o pai do nó para o seu melhor pai da rede</td>
                             </tr>
                         </tbody>
                     </table>
