@@ -41,9 +41,9 @@
                             <label for="opcoes">Escolha o que você deseja mudar: </label>
                             <select name="opcoes" id="opcoes">
                                 <option value="capacity-kw">Alterar capacidade nominal</option>
-                                <option value="add-node">Adicionar nó</option>
                                 <option value="delete-node">Deletar nó</option>
                                 <option value="change-parent">Trocar o pai do nó</option>
+                                <option value="change-parent-routing">Trocar o pai do nó com roteamento</option>
                             </select>
                         </div>
 
@@ -70,11 +70,6 @@
                             </tr>
 
                             <tr>
-                                <td>Adicionar nó</td>
-                                <td>Força a adição de um novo nó no pai em questão</td>
-                            </tr>
-
-                            <tr>
                                 <td>Deletar nó</td>
                                 <td>Deleta o nó em questão da árvore</td>
                             </tr>
@@ -82,6 +77,11 @@
                             <tr>
                                 <td>Trocar o pai do nó</td>
                                 <td>Troca o pai do nó forçadamente para o nó escolhido</td>
+                            </tr>
+
+                            <tr>
+                                <td>Trocar o pai do nó com roteamento</td>
+                                <td>Troca o pai do nó para o seu melhor pai da rede</td>
                             </tr>
                         </tbody>
                     </table>
