@@ -134,6 +134,7 @@ class Node:
     nominal_voltage: Optional[float] = None
     capacity: Optional[float] = None
     current_load: Optional[float] = None
+    energy_loss_pct: Optional[float] = None
 
 
 @dataclass

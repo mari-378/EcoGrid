@@ -244,9 +244,9 @@ section#change-node form button:hover {
     pointer-events: none;
     background: var(--fundo-logs);
     color: var(--escuro);
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 13px;
+    padding: 0.5rem 0.7rem;
+    border-radius: 0.4rem;
+    font-size: 0.7rem;
     max-width: 260px;
     line-height: 1.4;
 }
