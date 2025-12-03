@@ -1,6 +1,6 @@
 ## 🌐 EcoGrid+: Plataforma Inteligente para Redes de Energia Sustentáveis
 
-O **EcoGrid+** é uma plataforma de visualização e simulação de redes de distribuição elétrica. Ele permite o gerenciamento e a alteração de parâmetros (capacidade, carga) de nós (subestações, transformadores e consumidores) e a visualização em tempo real do status (Normal, Aviso, Sobrecarga) através de uma interface interativa baseada em árvores D3.js. É ideal para testar cenários de carga e falhas.
+O **EcoGrid+** é uma plataforma de visualização e simulação de redes de distribuição elétrica. Ele permite o gerenciamento e a alteração de parâmetros (capacidade, troca de pai, remoção de nó) de nós (subestações, transformadores e consumidores) e a visualização em tempo real do status (Normal, Aviso) através de uma interface interativa baseada em árvores D3.js. É ideal para testar cenários de carga e falhas.
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -11,7 +11,7 @@ O projeto EcoGrid é um *stack* completo (Full Stack) que combina um *backend* r
   * **Uvicorn:** Servidor ASGI para rodar a aplicação FastAPI.
   * **Jinja2:** Usado pelo FastAPI para renderizar os templates HTML.
   * **D3.js (Data-Driven Documents):** Biblioteca JavaScript utilizada para a **visualização interativa da árvore** (layout hierárquico, nós, links, zoom/pan).
-  * **JavaScript (ES Modules):** Usado no *frontend* para comunicação via **Fetch API** (para modificações de nó) e **WebSockets** (para simulações em tempo real).
+  * **JavaScript (ES Modules):** Usado no *frontend* para comunicação via **Fetch API** (para modificações de nó).
 
 -----
 
@@ -81,17 +81,3 @@ Abra seu navegador e acesse o endereço:
 **`http://127.0.0.1:8000`** ou **`http://localhost:8000`**
 
 Você poderá interagir com o menu principal para carregar a rede, simular eventos e modificar os nós, visualizando as mudanças em tempo real na árvore D3.js.
-
------
-
-## 📸 Demonstração
-
-**(Espaço para as Capturas de Tela - Adicionar depois)**
-
-### Visualização da Rede Inicial:
-
-*Captura de tela mostrando a árvore da rede elétrica inicial (Subestações, Transformadores e Consumidores) em estado "Normal".*
-
-### Simulação de Sobrecarga e Logs:
-
-*Exemplo de uma simulação em andamento, onde o nó afetado muda para o status **Overloaded** (vermelho) e as mensagens de logs são exibidas.*
